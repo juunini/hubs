@@ -259,7 +259,16 @@ async function mediaInflator(el, componentName, componentData, components) {
     mediaOptions.href = sanitizeUrl(components.link.href);
   }
 
-  const src = componentName === "link" ? componentData.href : componentData.src;
+  const getSrc = async () => {
+    if (!componentData.changeable) {
+      return componentData.src;
+    }
+
+    const data = await fetch(componentData.jsonSrc).then(response => response.json());
+    return data.src;
+  };
+
+  const src = componentName === "link" ? componentData.href : await getSrc();
 
   el.setAttribute("media-loader", {
     src: sanitizeUrl(src),
@@ -270,6 +279,27 @@ async function mediaInflator(el, componentName, componentData, components) {
     mediaOptions,
     moveTheParentNotTheMesh: true
   });
+
+  if (componentData.changeable) {
+    setInterval(async () => {
+      const src = await getSrc();
+
+      const oldData = el.getAttribute("media-loader");
+      if (oldData.src === src) {
+        return;
+      }
+
+      el.setAttribute("media-loader", {
+        src: sanitizeUrl(src),
+        fitToBox: true,
+        resolve: true,
+        fileIsOwned: true,
+        animate: false,
+        mediaOptions,
+        moveTheParentNotTheMesh: true
+      });
+    }, 1000);
+  }
 }
 
 AFRAME.GLTFModelPlus.registerComponent("model", "model", mediaInflator);
