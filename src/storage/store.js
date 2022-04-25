@@ -13,9 +13,8 @@ import { EventTarget } from "event-target-shim";
 import { fetchRandomDefaultAvatarId, generateRandomName } from "../utils/identity.js";
 import { NO_DEVICE_ID } from "../utils/media-devices-utils.js";
 import { getDefaultTheme } from "../utils/theme.js";
-import { AAModes } from "../effects";
 
-const defaultMaterialQuality = (function () {
+const defaultMaterialQuality = (function() {
   const MATERIAL_QUALITY_OPTIONS = ["low", "medium", "high"];
 
   // HACK: AFRAME is not available on all pages, so we catch the ReferenceError.
@@ -64,7 +63,7 @@ export const SCHEMA = {
       type: "object",
       additionalProperties: false,
       properties: {
-        displayName: { type: "string", pattern: "^[가-힣A-Za-z0-9_~ -]{1,32}$" },
+        displayName: { type: "string", pattern: "^[가-힣A-Za-z0-9_~ -]{3,32}$" },
         avatarId: { type: "string" },
         // personalAvatarId is obsolete, but we need it here for backwards compatibility.
         personalAvatarId: { type: "string" }
@@ -117,7 +116,7 @@ export const SCHEMA = {
         preferredSpeakers: { type: "string", default: NO_DEVICE_ID },
         preferredCamera: { type: "string", default: NO_DEVICE_ID },
         muteMicOnEntry: { type: "bool", default: false },
-        disableLeftRightPanning: { type: "bool", default: detectMobile() },
+        disableLeftRightPanning: { type: "bool", default: false },
         audioNormalization: { type: "bool", default: 0.0 },
         invertTouchscreenCameraMove: { type: "bool", default: true },
         enableOnScreenJoystickLeft: { type: "bool", default: detectMobile() },
@@ -159,10 +158,7 @@ export const SCHEMA = {
         cursorSize: { type: "number", default: 1 },
         nametagVisibility: { type: "string", default: "showAll" },
         nametagVisibilityDistance: { type: "number", default: 5 },
-        avatarVoiceLevels: { type: "object" },
-        enablePostEffects: { type: "bool", default: false },
-        enableBloom: { type: "bool", default: true }, // only applies if post effects are enabled
-        aaMode: { type: "string", default: AAModes.MSAA_4X } // only applies if post effects are enabled
+        avatarVoiceLevels: { type: "object" }
       }
     },
 
@@ -310,11 +306,6 @@ export default class Store extends EventTarget {
   };
 
   initProfile = async () => {
-    if (window.XRCLOUD) {
-      this._initXRCloudProfile();
-      return;
-    }
-
     if (this._shouldResetAvatarOnInit) {
       await this.resetToRandomDefaultAvatar();
     } else {
@@ -328,14 +319,6 @@ export default class Store extends EventTarget {
       this.update({ profile: { displayName: generateRandomName() } });
     }
   };
-
-  _initXRCloudProfile = () =>
-    this.update({
-      profile: {
-        displayName: window.XRCLOUD.nickname,
-        avatarId: window.XRCLOUD.avatarId
-      }
-    });
 
   resetToRandomDefaultAvatar = async () => {
     this.update({
