@@ -1,5 +1,9 @@
 import configs from "./configs";
 export function getCurrentHubId() {
+  if (window.XRCLOUD) {
+    return window.XRCLOUD.hubId;
+  }
+
   const qs = new URLSearchParams(location.search);
   const defaultRoomId = configs.feature("default_room_id");
 
