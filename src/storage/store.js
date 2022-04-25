@@ -310,6 +310,11 @@ export default class Store extends EventTarget {
   };
 
   initProfile = async () => {
+    if (window.XRCLOUD) {
+      this._initXRCloudProfile();
+      return;
+    }
+
     if (this._shouldResetAvatarOnInit) {
       await this.resetToRandomDefaultAvatar();
     } else {
@@ -323,6 +328,14 @@ export default class Store extends EventTarget {
       this.update({ profile: { displayName: generateRandomName() } });
     }
   };
+
+  _initXRCloudProfile = () =>
+    this.update({
+      profile: {
+        displayName: window.XRCLOUD.nickname,
+        avatarId: window.XRCLOUD.avatarId
+      }
+    });
 
   resetToRandomDefaultAvatar = async () => {
     this.update({
