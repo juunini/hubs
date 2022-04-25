@@ -109,7 +109,6 @@ const postgrestClient = (apiUrl, httpClient = fetchJson) => {
     let url = "";
     const options = {};
     options.headers = new Headers();
-    options.headers.set("Authorization", `Bearer ${currentAuthToken || currentPermsToken}`);
     const stripReadOnlyColumns = json => {
       const newJson = {};
 
