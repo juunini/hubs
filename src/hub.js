@@ -1387,4 +1387,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   authChannel.setSocket(socket);
   linkChannel.setSocket(socket);
+
+  if (window.XRCLOUD) {
+    const { hubName, appName, faviconUrl } = window.XRCLOUD;
+
+    document.title = `${hubName} | ${appName}`;
+    document.querySelector('link[rel="icon"]').href = faviconUrl;
+    document.querySelector('link[rel="apple-touch-icon"]').href = faviconUrl;
+  }
 });
