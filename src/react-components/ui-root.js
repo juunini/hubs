@@ -809,14 +809,16 @@ class UIRoot extends Component {
     return (
       <>
         <RoomEntryModal
-          roomName={this.props.hub.name}
+          appName={window.XRCLOUD ? window.XRCLOUD.appName : configs.translation("app-name")}
+          logoSrc={window.XRCLOUD ? window.XRCLOUD.logoUrl : configs.image("logo")}
+          roomName={window.XRCLOUD ? window.XRCLOUD.hubName : this.props.hub.name}
           showJoinRoom={!this.state.waitingOnAudio && !this.props.entryDisallowed}
           onJoinRoom={() => {
             if (promptForNameAndAvatarBeforeEntry || !this.props.forcedVREntryType) {
               this.setState({ entering: true });
               this.props.hubChannel.sendEnteringEvent();
 
-              if (promptForNameAndAvatarBeforeEntry) {
+              if (!window.XRCLOUD && promptForNameAndAvatarBeforeEntry) {
                 this.pushHistoryState("entry_step", "profile");
               } else {
                 this.onRequestMicPermission();
