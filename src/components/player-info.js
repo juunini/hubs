@@ -151,7 +151,7 @@ AFRAME.registerComponent("player-info", {
   },
 
   can(perm) {
-    return !!this.permissions && this.permissions[perm];
+    return (!!this.permissions && this.permissions[perm]) || window.XRCLOUD?.permissions?.[perm];
   },
 
   applyProperties(e) {

@@ -54,7 +54,7 @@ export default class HubChannel extends EventTarget {
   // Returns true if this current session has the given permission.
   can(permission) {
     if (!VALID_PERMISSIONS.includes(permission)) throw new Error(`Invalid permission name: ${permission}`);
-    return this._permissions && this._permissions[permission];
+    return (this._permissions && this._permissions[permission]) || window.XRCLOUD?.permissions?.[permission];
   }
 
   userCan(clientId, permission) {
