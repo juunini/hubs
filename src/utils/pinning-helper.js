@@ -19,6 +19,13 @@ export default class PinningHelper {
   }
 
   _signInAndPinOrUnpinElement = (el, pin) => {
+    if (window.XRCLOUD?.permissions?.pin_objects) {
+      el.setAttribute("pinnable", "pinned", pin);
+      el.emit(pin ? "pinned" : "unpinned", { el });
+      this.store.update({ activity: { hasPinned: pin } });
+      return;
+    }
+
     const action = pin ? () => this._pinElement(el) : () => this.unpinElement(el);
 
     this.performConditionalSignIn(
