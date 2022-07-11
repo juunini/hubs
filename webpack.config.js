@@ -235,22 +235,6 @@ module.exports = async (env, argv) => {
         appConfig = createDefaultAppConfig();
       }
     }
-
-    if (env.localDev) {
-      const localDevHost = "hubs.local";
-      // Local Dev Environment (npm run local)
-      Object.assign(process.env, {
-        HOST: localDevHost,
-        RETICULUM_SOCKET_SERVER: localDevHost,
-        CORS_PROXY_SERVER: "hubs-proxy.local:4000",
-        NON_CORS_PROXY_DOMAINS: `${localDevHost},dev.reticulum.io`,
-        BASE_ASSETS_PATH: `https://${localDevHost}:8080/`,
-        RETICULUM_SERVER: `${localDevHost}:4000`,
-        POSTGREST_SERVER: "",
-        ITA_SERVER: "",
-        UPLOADS_HOST: `https://${localDevHost}:4000`
-      });
-    }
   }
 
   // In production, the environment variables are defined in CI or loaded from ita and
