@@ -80,7 +80,17 @@ AFRAME.registerComponent("ik-controller", {
     head: { type: "string", default: "Head" },
     neck: { type: "string", default: "Neck" },
     leftHand: { type: "string", default: "LeftHand" },
+    leftForeArm: { type: "string", default: "LeftForeArm" },
+    leftArm: { type: "string", default: "LeftArm" },
     rightHand: { type: "string", default: "RightHand" },
+    rightForeArm: { type: "string", default: "RightForeArm" },
+    rightArm: { type: "string", default: "RightArm" },
+    leftFoot: { type: "string", default: "LeftFoot" },
+    leftLeg: { type: "string", default: "LeftLeg" },
+    leftUpLeg: { type: "string", default: "LeftUpLeg" },
+    rightFoot: { type: "string", default: "RightFoot" },
+    rightLeg: { type: "string", default: "RightLeg" },
+    rightUpLeg: { type: "string", default: "RightUpLeg" },
     chest: { type: "string", default: "Spine" },
     rotationSpeed: { default: 8 },
     maxLerpAngle: { default: 90 * THREE.MathUtils.DEG2RAD },
@@ -152,8 +162,48 @@ AFRAME.registerComponent("ik-controller", {
       this.leftHand = this.el.object3D.getObjectByName(this.data.leftHand);
     }
 
+    if (this.data.leftForeArm !== oldData.leftForeArm) {
+      this.leftForeArm = this.el.object3D.getObjectByName(this.data.leftForeArm);
+    }
+
+    if (this.data.leftArm !== oldData.leftArm) {
+      this.leftArm = this.el.object3D.getObjectByName(this.data.leftArm);
+    }
+
     if (this.data.rightHand !== oldData.rightHand) {
       this.rightHand = this.el.object3D.getObjectByName(this.data.rightHand);
+    }
+
+    if (this.data.rightForeArm !== oldData.rightForeArm) {
+      this.rightForeArm = this.el.object3D.getObjectByName(this.data.rightForeArm);
+    }
+
+    if (this.data.rightArm !== oldData.rightArm) {
+      this.rightArm = this.el.object3D.getObjectByName(this.data.rightArm);
+    }
+
+    if (this.data.leftFoot !== oldData.leftFoot) {
+      this.leftFoot = this.el.object3D.getObjectByName(this.data.leftFoot);
+    }
+
+    if (this.data.leftLeg !== oldData.leftLeg) {
+      this.leftLeg = this.el.object3D.getObjectByName(this.data.leftLeg);
+    }
+
+    if (this.data.leftUpLeg !== oldData.leftUpLeg) {
+      this.leftUpLeg = this.el.object3D.getObjectByName(this.data.leftUpLeg);
+    }
+    
+    if (this.data.rightFoot !== oldData.rightFoot) {
+      this.rightFoot = this.el.object3D.getObjectByName(this.data.rightFoot);
+    }
+
+    if (this.data.rightLeg !== oldData.rightLeg) {
+      this.rightLeg = this.el.object3D.getObjectByName(this.data.rightLeg);
+    }
+
+    if (this.data.rightUpLeg !== oldData.rightUpLeg) {
+      this.rightUpLeg = this.el.object3D.getObjectByName(this.data.rightUpLeg);
     }
 
     if (this.data.chest !== oldData.chest) {
