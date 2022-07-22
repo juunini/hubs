@@ -23,6 +23,16 @@ function ensureAvatarNodes(json) {
       extensions: { MOZ_hubs_components: { "scale-audio-feedback": "" } }
     });
     nodes.push({ name: "Neck", children: [nodes.length - 1] });
+    nodes.push({ name: "RightFoot", children: [nodes.length - 1] });
+    nodes.push({ name: "RightLeg", children: [nodes.length - 1] });
+    nodes.push({ name: "RightUpLeg", children: [nodes.length - 1] });
+    nodes.push({ name: "LeftFoot", children: [nodes.length - 1] });
+    nodes.push({ name: "LeftLeg", children: [nodes.length - 1] });
+    nodes.push({ name: "LeftUpLeg", children: [nodes.length - 1] });
+    nodes.push({ name: "RightForeArm", children: [nodes.length - 1] });
+    nodes.push({ name: "RightArm", children: [nodes.length - 1] });
+    nodes.push({ name: "LeftForeArm", children: [nodes.length - 1] });
+    nodes.push({ name: "LeftArm", children: [nodes.length - 1] });
     nodes.push({ name: "Spine", children: [nodes.length - 1] });
     nodes.push({ name: "Hips", children: [nodes.length - 1] });
     nodes.push({ name: "AvatarRoot", children: [nodes.length - 1] });
