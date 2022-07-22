@@ -61,7 +61,7 @@ export async function getAvatarThumbnailUrl(avatarId) {
 // arbitrary models with some sort of functionality. This provides a fallback
 export const MAT_NAME = "Bot_PBS";
 export function ensureAvatarMaterial(gltf) {
-  if (gltf.materials.find(m => m.name === MAT_NAME)) return gltf;
+  if (gltf.materials?.find(m => m.name === MAT_NAME)) return gltf;
 
   function materialForMesh(mesh) {
     if (!mesh.primitives) return;
