@@ -160,6 +160,7 @@ AFRAME.registerComponent("ik-controller", {
 
     if (this.data.leftHand !== oldData.leftHand) {
       this.leftHand = this.el.object3D.getObjectByName(this.data.leftHand);
+      this.leftHand?.el.setAttribute("position", this.leftHand?.position);
     }
 
     if (this.data.leftForeArm !== oldData.leftForeArm) {
@@ -172,6 +173,7 @@ AFRAME.registerComponent("ik-controller", {
 
     if (this.data.rightHand !== oldData.rightHand) {
       this.rightHand = this.el.object3D.getObjectByName(this.data.rightHand);
+      this.rightHand?.el.setAttribute("position", this.rightHand?.position);
     }
 
     if (this.data.rightForeArm !== oldData.rightForeArm) {
@@ -193,7 +195,7 @@ AFRAME.registerComponent("ik-controller", {
     if (this.data.leftUpLeg !== oldData.leftUpLeg) {
       this.leftUpLeg = this.el.object3D.getObjectByName(this.data.leftUpLeg);
     }
-    
+
     if (this.data.rightFoot !== oldData.rightFoot) {
       this.rightFoot = this.el.object3D.getObjectByName(this.data.rightFoot);
     }
@@ -229,7 +231,7 @@ AFRAME.registerComponent("ik-controller", {
 
     const root = this.ikRoot.el.object3D;
     root.updateMatrices();
-    const { camera, leftController, rightController } = this.ikRoot;
+    const { camera } = this.ikRoot;
 
     camera.object3D.updateMatrix();
 
@@ -323,10 +325,18 @@ AFRAME.registerComponent("ik-controller", {
       chest.matrixNeedsUpdate = true;
     }
 
-    const { leftHand, rightHand } = this;
+    this._hands.forEach(hand => {
+      if (this._existsControllerAndHand(hand)) {
+        this.updateHand(
+          HAND_ROTATIONS[hand],
+          this._getHand(hand),
+          this._getController(hand).object3D,
+          true,
+          this.isInView
+        );
+      }
+    });
 
-    if (leftHand) this.updateHand(HAND_ROTATIONS.left, leftHand, leftController.object3D, true, this.isInView);
-    if (rightHand) this.updateHand(HAND_ROTATIONS.right, rightHand, rightController.object3D, false, this.isInView);
     this.forceIkUpdate = false;
 
     if (!this._hadFirstTick) {
@@ -403,5 +413,39 @@ AFRAME.registerComponent("ik-controller", {
         }
       }
     };
-  })()
+  })(),
+
+  /**
+   * @private
+   * @typedef {"left" | "right"} Hand
+   * @type {Hand[]}
+   */
+  _hands: ["left", "right"],
+
+  /**
+   * @private
+   * @param {Hand} hand
+   * @returns {Object.<string, THREE.Object3D>} - if controller is exists for the given direction.
+   */
+  _getController(hand) {
+    return this.ikRoot[`${hand}Controller`];
+  },
+
+  /**
+   * @private
+   * @param {Hand} hand
+   * @returns {THREE.Object3D} - if avatar has hand for the given direction.
+   */
+  _getHand(hand) {
+    return this[`${hand}Hand`];
+  },
+
+  /**
+   * @private
+   * @param {Hand} hand
+   * @returns {boolean}
+   */
+  _existsControllerAndHand(hand) {
+    return this._getController(hand).object3D.visible && this._getHand(hand);
+  }
 });
