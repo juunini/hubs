@@ -148,6 +148,15 @@
                             >
                             </a-entity>
                         </template>
+                        <template data-name="Armature">
+                            <a-entity
+                                ik-controller
+                                hand-pose__left
+                                hand-pose__right
+                                networked-audio-analyser
+                            >
+                            </a-entity>
+                        </template>
 
                         <template data-name="Spine">
                             <a-entity is-remote-hover-target personal-space-invader="radius: 0.2; useMaterial: true;" bone-visibility>
@@ -1095,6 +1104,16 @@
 
             <a-entity gltf-model-plus="inflate: true;" class="model">
                 <template data-name="AvatarRoot">
+                    <a-entity
+                        ik-controller="alwaysUpdate: true"
+                        disable-frustum-culling
+                        hand-pose__left
+                        hand-pose__right
+                        hand-pose-controller__left="networkedAvatar:#avatar-rig;eventSrc:#player-left-controller"
+                        hand-pose-controller__right="networkedAvatar:#avatar-rig;eventSrc:#player-right-controller"
+                    ></a-entity>
+                </template>
+                <template data-name="Armature">
                     <a-entity
                         ik-controller="alwaysUpdate: true"
                         disable-frustum-culling

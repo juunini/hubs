@@ -18,6 +18,8 @@ const NAMETAG_HEIGHT = 0.25;
 const NAMETAG_OFFSET = 0.2;
 const TYPING_ANIM_SPEED = 150;
 const DISPLAY_NAME_LENGTH = 18;
+const HUBS_AVATAR_ROOT = "AvatarRoot";
+const STANDARD_AVATAR_ROOT = "Armature";
 
 const ANIM_CONFIG = {
   duration: 400,
@@ -253,7 +255,7 @@ AFRAME.registerComponent("name-tag", {
     await nextTick();
     this.ikRoot = findAncestorWithComponent(this.el, "ik-root").object3D;
     this.neck = this.ikRoot.el.querySelector(".Neck").object3D;
-    this.audioAnalyzer = this.ikRoot.el.querySelector(".AvatarRoot").components["networked-audio-analyser"];
+    this.audioAnalyzer = this._getAudioAnalyzer();
 
     this.updateAvatarModelAABB();
     const tmpVector = new THREE.Vector3();
@@ -269,6 +271,21 @@ AFRAME.registerComponent("name-tag", {
     this.updateDisplayName();
     this.updateHandRaised();
     this.resizeNameTag();
+  },
+
+  /**
+   * @private
+   */
+  _getAudioAnalyzer() {
+    const selector = "." + this._isBasisHubsAvatar() ? HUBS_AVATAR_ROOT : STANDARD_AVATAR_ROOT;
+    return (this.audioAnalyzer = this.ikRoot.el.querySelector(selector).components["networked-audio-analyser"]);
+  },
+
+  /**
+   * @private
+   */
+  _isBasisHubsAvatar() {
+    return this.ikRoot.el.object3D.getObjectByName("AvatarRoot");
   },
 
   updateTheme() {

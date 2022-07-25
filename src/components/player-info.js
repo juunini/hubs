@@ -13,6 +13,7 @@ function ensureAvatarNodes(json) {
     // So, we need to construct a suitable hierarchy for avatar functionality to work.
     // We re-parent the original root node to the Head node and set the scene root to a new AvatarRoot.
 
+    // Note: If model's root name is 'Armature', the scene root is Armature. (This added with Full-body avatar feature)
     // Note: We assume that the first node in the primary scene is the one we care about.
     const originalRoot = json.scenes[json.scene].nodes[0];
     nodes.push({ name: "LeftEye", extensions: { MOZ_hubs_components: {} } });
@@ -36,6 +37,7 @@ function ensureAvatarNodes(json) {
     nodes.push({ name: "Spine", children: [nodes.length - 1] });
     nodes.push({ name: "Hips", children: [nodes.length - 1] });
     nodes.push({ name: "AvatarRoot", children: [nodes.length - 1] });
+    nodes.push({ name: "Armature", children: [nodes.length - 1] });
     json.scenes[json.scene].nodes[0] = nodes.length - 1;
   }
   return json;
