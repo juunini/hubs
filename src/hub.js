@@ -72,6 +72,7 @@ import "./components/emoji";
 import "./components/emoji-hud";
 import "./components/virtual-gamepad-controls";
 import "./components/ik-controller";
+import "./components/avatar-animation";
 import "./components/hand-controls2";
 import "./components/hoverable-visuals";
 import "./components/hover-visuals";
