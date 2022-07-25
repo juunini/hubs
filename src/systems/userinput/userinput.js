@@ -215,12 +215,23 @@ AFRAME.registerSystem("userinput", {
         this.values[path] = value;
         this.generations[path] = this.generation;
       },
-      setVector2: function(path, a, b) {
+      setVector2: function(path, right, front) {
         const value = this.values[path] || [];
-        value[0] = a;
-        value[1] = b;
+        value[0] = right;
+        value[1] = front;
         this.values[path] = value;
         this.generations[path] = this.generation;
+
+        const isCharacterMove = path === "/actions/characterAcceleration";
+        if (!isCharacterMove) {
+          return;
+        }
+
+        const animation = document.querySelector("[avatar-animation]")?.components?.["avatar-animation"];
+        if (animation) {
+          animation.accelerationFront = front;
+          animation.accelerationRight = right;
+        }
       },
       setPose: function(path, pose) {
         this.setValueType(path, pose);

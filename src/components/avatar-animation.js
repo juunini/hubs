@@ -4,6 +4,8 @@ AFRAME.registerComponent("avatar-animation", {
    * @type {Map<string, THREE.AnimationClip>}
    */
   animations: new Map(),
+  accelerationFront: 0,
+  accelerationRight: 0,
 
   update() {
     this.animations.clear();
@@ -21,5 +23,20 @@ AFRAME.registerComponent("avatar-animation", {
 
   tick() {
     this.mixer.update(this.clock.getDelta());
+
+    if (this._isStopped()) {
+      this.animations.forEach(animation => animation.setEffectiveWeight(0));
+      this.animations.get("Idle")?.setEffectiveWeight(1);
+      return;
+    }
+
+    this.animations.get("Walking")?.setEffectiveWeight(this.accelerationFront);
+    this.animations.get("WalkingBackwards")?.setEffectiveWeight(-this.accelerationFront);
+    this.animations.get("LeftStrafeWalk")?.setEffectiveWeight(-this.accelerationRight);
+    this.animations.get("RightStrafeWalk")?.setEffectiveWeight(this.accelerationRight);
+  },
+
+  _isStopped() {
+    return this.accelerationFront === 0 && this.accelerationRight === 0;
   }
 });
