@@ -212,8 +212,24 @@ AFRAME.registerComponent("ik-controller", {
       this.chest = this.el.object3D.getObjectByName(this.data.chest);
     }
 
+    const avatar = this.el.closest(".model");
+    if (this._hasFoot()) {
+      avatar.setAttribute("position", new THREE.Vector3(0, -1.2, 0));
+    } else {
+      avatar.removeAttribute("position");
+    }
+
+    this._hands.forEach(hand => {
+      if (this._isNoControllerAndNoArmAvatar(hand)) {
+        this._hideHand(hand);
+      }
+    });
+
     // Set middleEye's position to be right in the middle of the left and right eyes.
-    this.middleEyePosition.addVectors(this.leftEye.position, this.rightEye.position);
+    this.middleEyePosition.addVectors(
+      this.leftEye?.position || new THREE.Vector3(0, 1.6, 0),
+      this.rightEye?.position || new THREE.Vector3(0, 1.6, 0)
+    );
     this.middleEyePosition.divideScalar(2);
     this.middleEyeMatrix.makeTranslation(this.middleEyePosition.x, this.middleEyePosition.y, this.middleEyePosition.z);
     this.invMiddleEyeToHead = this.middleEyeMatrix.copy(this.middleEyeMatrix).invert();
@@ -447,5 +463,30 @@ AFRAME.registerComponent("ik-controller", {
    */
   _existsControllerAndHand(hand) {
     return this._getController(hand).object3D.visible && this._getHand(hand);
+  },
+
+  /**
+   * @private
+   * @param {Hand} hand
+   * @returns {boolean}
+   */
+  _isNoControllerAndNoArmAvatar(hand) {
+    return !this.ikRoot[`${hand}Controller`].object3D.visible && !this[`${hand}Arm`];
+  },
+
+  /**
+   * @private
+   * @param {Hand} hand
+   */
+  _hideHand(hand) {
+    this[`${hand}Hand`]?.el.setAttribute("visible", false);
+  },
+
+  /**
+   * @private
+   * @returns {boolean}
+   */
+  _hasFoot() {
+    return this.leftFoot || this.rightFoot;
   }
 });
