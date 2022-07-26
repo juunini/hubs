@@ -7,6 +7,15 @@ AFRAME.registerComponent("avatar-animation", {
   accelerationFront: 0,
   accelerationRight: 0,
   boost: false,
+  fly: false,
+
+  set(key, value) {
+    this[key] = value;
+  },
+
+  get(key) {
+    return this[key];
+  },
 
   update() {
     this.animations.clear();
@@ -19,13 +28,17 @@ AFRAME.registerComponent("avatar-animation", {
       this.animations.get(animation.name).setEffectiveWeight(0);
     });
 
-    console.log(this.animations);
-
     this.animations.get("Idle")?.setEffectiveWeight(1);
   },
 
   tick() {
     this.mixer.update(this.clock.getDelta());
+
+    if (this.fly) {
+      this.animations.forEach(animation => animation.setEffectiveWeight(0));
+      this.animations.get("Flying")?.setEffectiveWeight(1);
+      return;
+    }
 
     if (this._isStopped()) {
       this.animations.forEach(animation => animation.setEffectiveWeight(0));

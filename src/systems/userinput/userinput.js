@@ -207,6 +207,7 @@ AFRAME.registerSystem("userinput", {
       generation: 0,
       values: {},
       generations: {},
+      animation: undefined,
       get: function(path) {
         if (this.generations[path] !== this.generation) return undefined;
         return this.values[path];
@@ -215,14 +216,22 @@ AFRAME.registerSystem("userinput", {
         this.values[path] = value;
         this.generations[path] = this.generation;
 
-        const isBoostChanged = path === paths.actions.boost && value !== undefined;
-        if (!isBoostChanged) {
+        if (!this.animation) {
+          this.animation = document.querySelector("[avatar-animation]")?.components?.["avatar-animation"];
+        }
+
+        if (!this.animation) {
           return;
         }
 
-        const animation = document.querySelector("[avatar-animation]")?.components?.["avatar-animation"];
-        if (animation) {
-          animation.boost = value;
+        const isBoostChanged = path === paths.actions.boost && value !== undefined;
+        if (isBoostChanged) {
+          this.animation?.set("boost", value);
+        }
+
+        const isToggleFly = path === paths.actions.toggleFly && value === true;
+        if (isToggleFly) {
+          this.animation?.set("fly", !this.animation?.get("fly"));
         }
       },
       setVector2: function(path, right, front) {
