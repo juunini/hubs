@@ -214,6 +214,16 @@ AFRAME.registerSystem("userinput", {
       setValueType: function(path, value) {
         this.values[path] = value;
         this.generations[path] = this.generation;
+
+        const isBoostChanged = path === paths.actions.boost && value !== undefined;
+        if (!isBoostChanged) {
+          return;
+        }
+
+        const animation = document.querySelector("[avatar-animation]")?.components?.["avatar-animation"];
+        if (animation) {
+          animation.boost = value;
+        }
       },
       setVector2: function(path, right, front) {
         const value = this.values[path] || [];

@@ -6,6 +6,7 @@ AFRAME.registerComponent("avatar-animation", {
   animations: new Map(),
   accelerationFront: 0,
   accelerationRight: 0,
+  boost: false,
 
   update() {
     this.animations.clear();
@@ -17,6 +18,8 @@ AFRAME.registerComponent("avatar-animation", {
       this.animations.get(animation.name).play();
       this.animations.get(animation.name).setEffectiveWeight(0);
     });
+
+    console.log(this.animations);
 
     this.animations.get("Idle")?.setEffectiveWeight(1);
   },
@@ -30,10 +33,12 @@ AFRAME.registerComponent("avatar-animation", {
       return;
     }
 
-    this.animations.get("Walking")?.setEffectiveWeight(this.accelerationFront);
-    this.animations.get("WalkingBackwards")?.setEffectiveWeight(-this.accelerationFront);
-    this.animations.get("LeftStrafeWalk")?.setEffectiveWeight(-this.accelerationRight);
-    this.animations.get("RightStrafeWalk")?.setEffectiveWeight(this.accelerationRight);
+    this.animations.get(this.boost ? "Running" : "Walking")?.setEffectiveWeight(this.accelerationFront);
+    this.animations
+      .get(this.boost ? "RunningBackward" : "WalkingBackwards")
+      ?.setEffectiveWeight(-this.accelerationFront);
+    this.animations.get(this.boost ? "LeftStrafe" : "LeftStrafeWalk")?.setEffectiveWeight(-this.accelerationRight);
+    this.animations.get(this.boost ? "RightStrafe" : "RightStrafeWalk")?.setEffectiveWeight(this.accelerationRight);
   },
 
   _isStopped() {
