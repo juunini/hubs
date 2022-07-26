@@ -113,17 +113,26 @@ AFRAME.registerComponent("avatar-animation", {
   },
 
   _flying() {
-    this._reset();
+    this._reset(ANIMATIONS.FLYING);
     this.animations.get(ANIMATIONS.FLYING)?.setEffectiveWeight(1);
   },
 
   _idle() {
-    this._reset();
+    this._reset(ANIMATIONS.IDLE);
     this.animations.get(ANIMATIONS.IDLE)?.setEffectiveWeight(1);
   },
 
-  _reset() {
-    this.animations.forEach(animation => animation.setEffectiveWeight(0));
+  /**
+   * @param {string[]} ignore - list of ignore to reset animation
+   */
+  _reset(...ignore) {
+    this.animations.forEach(animation => {
+      if (ignore.includes(animation.name)) {
+        return;
+      }
+
+      animation.setEffectiveWeight(0);
+    });
   },
 
   _running() {
