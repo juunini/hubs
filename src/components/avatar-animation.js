@@ -46,12 +46,35 @@ AFRAME.registerComponent("avatar-animation", {
       return;
     }
 
-    this.animations.get(this.boost ? "Running" : "Walking")?.setEffectiveWeight(this.accelerationFront);
-    this.animations
-      .get(this.boost ? "RunningBackward" : "WalkingBackwards")
-      ?.setEffectiveWeight(-this.accelerationFront);
-    this.animations.get(this.boost ? "LeftStrafe" : "LeftStrafeWalk")?.setEffectiveWeight(-this.accelerationRight);
-    this.animations.get(this.boost ? "RightStrafe" : "RightStrafeWalk")?.setEffectiveWeight(this.accelerationRight);
+    if (this.boost) {
+      this._removeWalkingAnimation();
+
+      this.animations.get("Running")?.setEffectiveWeight(this.accelerationFront);
+      this.animations.get("RunningBackward")?.setEffectiveWeight(-this.accelerationFront);
+      this.animations.get("LeftStrafe")?.setEffectiveWeight(-this.accelerationRight);
+      this.animations.get("RightStrafe")?.setEffectiveWeight(this.accelerationRight);
+    } else {
+      this._removeRunningAnimation();
+
+      this.animations.get("Walking")?.setEffectiveWeight(this.accelerationFront);
+      this.animations.get("WalkingBackwards")?.setEffectiveWeight(-this.accelerationFront);
+      this.animations.get("LeftStrafeWalk")?.setEffectiveWeight(-this.accelerationRight);
+      this.animations.get("RightStrafeWalk")?.setEffectiveWeight(this.accelerationRight);
+    }
+  },
+
+  _removeWalkingAnimation() {
+    this.animations.get("Walking")?.setEffectiveWeight(0);
+    this.animations.get("WalkingBackwards")?.setEffectiveWeight(0);
+    this.animations.get("LeftStrafeWalk")?.setEffectiveWeight(0);
+    this.animations.get("RightStrafeWalk")?.setEffectiveWeight(0);
+  },
+
+  _removeRunningAnimation() {
+    this.animations.get("Running")?.setEffectiveWeight(0);
+    this.animations.get("RunningBackward")?.setEffectiveWeight(0);
+    this.animations.get("LeftStrafe")?.setEffectiveWeight(0);
+    this.animations.get("RightStrafe")?.setEffectiveWeight(0);
   },
 
   _isStopped() {
