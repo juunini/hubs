@@ -220,10 +220,6 @@ AFRAME.registerSystem("userinput", {
           this.animation = document.querySelector("[avatar-animation]")?.components?.["avatar-animation"];
         }
 
-        if (!this.animation) {
-          return;
-        }
-
         const isBoostChanged = path === paths.actions.boost && value !== undefined;
         if (isBoostChanged) {
           this.animation?.set("boost", value);
@@ -246,11 +242,12 @@ AFRAME.registerSystem("userinput", {
           return;
         }
 
-        const animation = document.querySelector("[avatar-animation]")?.components?.["avatar-animation"];
-        if (animation) {
-          animation.accelerationFront = front;
-          animation.accelerationRight = right;
+        if (!this.animation) {
+          this.animation = document.querySelector("[avatar-animation]")?.components?.["avatar-animation"];
         }
+
+        this.animation?.set("accelerationFront", front);
+        this.animation?.set("accelerationRight", right);
       },
       setPose: function(path, pose) {
         this.setValueType(path, pose);
