@@ -35,32 +35,23 @@ AFRAME.registerComponent("avatar-animation", {
     this.mixer.update(this.clock.getDelta());
 
     if (this.fly) {
-      this.animations.forEach(animation => animation.setEffectiveWeight(0));
-      this.animations.get("Flying")?.setEffectiveWeight(1);
+      this._flying();
       return;
     }
 
     if (this._isStopped()) {
-      this.animations.forEach(animation => animation.setEffectiveWeight(0));
-      this.animations.get("Idle")?.setEffectiveWeight(1);
+      this._idle();
       return;
     }
 
     if (this.boost) {
       this._removeWalkingAnimation();
-
-      this.animations.get("Running")?.setEffectiveWeight(this.accelerationFront);
-      this.animations.get("RunningBackward")?.setEffectiveWeight(-this.accelerationFront);
-      this.animations.get("LeftStrafe")?.setEffectiveWeight(-this.accelerationRight);
-      this.animations.get("RightStrafe")?.setEffectiveWeight(this.accelerationRight);
-    } else {
-      this._removeRunningAnimation();
-
-      this.animations.get("Walking")?.setEffectiveWeight(this.accelerationFront);
-      this.animations.get("WalkingBackwards")?.setEffectiveWeight(-this.accelerationFront);
-      this.animations.get("LeftStrafeWalk")?.setEffectiveWeight(-this.accelerationRight);
-      this.animations.get("RightStrafeWalk")?.setEffectiveWeight(this.accelerationRight);
+      this._running();
+      return;
     }
+
+    this._removeRunningAnimation();
+    this._walking();
   },
 
   _removeWalkingAnimation() {
@@ -75,6 +66,30 @@ AFRAME.registerComponent("avatar-animation", {
     this.animations.get("RunningBackward")?.setEffectiveWeight(0);
     this.animations.get("LeftStrafe")?.setEffectiveWeight(0);
     this.animations.get("RightStrafe")?.setEffectiveWeight(0);
+  },
+
+  _flying() {
+    this.animations.forEach(animation => animation.setEffectiveWeight(0));
+    this.animations.get("Flying")?.setEffectiveWeight(1);
+  },
+
+  _idle() {
+    this.animations.forEach(animation => animation.setEffectiveWeight(0));
+    this.animations.get("Idle")?.setEffectiveWeight(1);
+  },
+
+  _running() {
+    this.animations.get("Running")?.setEffectiveWeight(this.accelerationFront);
+    this.animations.get("RunningBackward")?.setEffectiveWeight(-this.accelerationFront);
+    this.animations.get("LeftStrafe")?.setEffectiveWeight(-this.accelerationRight);
+    this.animations.get("RightStrafe")?.setEffectiveWeight(this.accelerationRight);
+  },
+
+  _walking() {
+    this.animations.get("Walking")?.setEffectiveWeight(this.accelerationFront);
+    this.animations.get("WalkingBackwards")?.setEffectiveWeight(-this.accelerationFront);
+    this.animations.get("LeftStrafeWalk")?.setEffectiveWeight(-this.accelerationRight);
+    this.animations.get("RightStrafeWalk")?.setEffectiveWeight(this.accelerationRight);
   },
 
   _isStopped() {
