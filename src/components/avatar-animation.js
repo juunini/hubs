@@ -94,6 +94,8 @@ AFRAME.registerComponent("avatar-animation", {
       return;
     }
 
+    this._resetIdle();
+
     if (this.boost) {
       this._resetWalking();
       this._running();
@@ -120,6 +122,10 @@ AFRAME.registerComponent("avatar-animation", {
   _idle() {
     this._reset(ANIMATIONS.IDLE);
     this.animations.get(ANIMATIONS.IDLE)?.setEffectiveWeight(1);
+  },
+
+  _resetIdle() {
+    this.animations.get(ANIMATIONS.IDLE)?.setEffectiveWeight(0);
   },
 
   /**
