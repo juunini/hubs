@@ -23,6 +23,7 @@ import { getPresenceProfileForSession, hubUrl } from "../utils/phoenix-utils";
 import { getMicrophonePresences } from "../utils/microphone-presence";
 import { getCurrentStreamer } from "../utils/component-utils";
 import { isIOS } from "../utils/is-mobile";
+import { CAMERA_MODE_THIRD_PERSON_VIEW, CAMERA_MODE_FIRST_PERSON } from "../systems/camera-system";
 
 import ProfileEntryPanel from "./profile-entry-panel";
 import MediaBrowserContainer from "./media-browser";
@@ -1547,6 +1548,23 @@ class UIRoot extends Component {
                       </>
                     )}
                     <ChatToolbarButtonContainer onClick={() => this.toggleSidebar("chat")} />
+                    {entered && (
+                      <ToolbarButton
+                        icon={<VRIcon />}
+                        label={<FormattedMessage id="toolbar.camera-view" defaultMessage="3rd person view" />}
+                        onClick={() => {
+                          const cameraMode = AFRAME.scenes[0].systems["hubs-systems"].cameraSystem.mode;
+
+                          if (cameraMode === CAMERA_MODE_FIRST_PERSON) {
+                            AFRAME.scenes[0].systems["hubs-systems"].cameraSystem.mode = CAMERA_MODE_THIRD_PERSON_VIEW;
+                          }
+
+                          if (cameraMode === CAMERA_MODE_THIRD_PERSON_VIEW) {
+                            AFRAME.scenes[0].systems["hubs-systems"].cameraSystem.mode = CAMERA_MODE_FIRST_PERSON;
+                          }
+                        }}
+                      />
+                    )}
                     {entered &&
                       isMobileVR && (
                         <ToolbarButton
