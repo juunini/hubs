@@ -3,8 +3,8 @@ import { AVATAR_TYPES } from "../utils/avatar-utils";
 import { registerComponentInstance, deregisterComponentInstance } from "../utils/component-utils";
 import defaultAvatar from "../assets/models/DefaultAvatar.glb";
 import { MediaDevicesEvents } from "../utils/media-devices-utils";
-import { createHeadlessModelForSkinnedMesh } from "../utils/three-utils";
-import { Layers } from "../camera-layers";
+import { createModelForSkinnedMesh } from "../utils/three-utils";
+import { Layers } from "./layers";
 
 function ensureAvatarNodes(json) {
   const { nodes } = json;
@@ -77,10 +77,10 @@ AFRAME.registerComponent("player-info", {
       let isSkinnedAvatar = false;
       modelEl.object3D.traverse(function (o) {
         if (o.isSkinnedMesh) {
-          const headlessMesh = createHeadlessModelForSkinnedMesh(o);
-          if (headlessMesh) {
+          const mesh = createModelForSkinnedMesh(o);
+          if (mesh) {
             isSkinnedAvatar = true;
-            o.parent.add(headlessMesh);
+            o.parent.add(mesh);
           }
         }
       });
