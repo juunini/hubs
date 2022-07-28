@@ -1,0 +1,40 @@
+name: Deploy S3 Alpha
+
+on:
+  push:
+    branches:
+      - alpha
+
+jobs:
+  deploy-s3-alpha:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          CORS_PROXY_SERVER: ${{ secrets.CORS_PROXY_SERVER_ALPHA }}
+          BASE_ASSETS_PATH: ${{ secrets.BASE_ASSETS_PATH_ALPHA }}
+          SHORTLINK_DOMAIN: ${{ secrets.SHORTLINK_DOMAIN_ALPHA }}
+          UPLOADS_HOST: ${{ secrets.UPLOADS_HOST_ALPHA }}
+          RETICULUM_SERVER: ${{ secrets.RETICULUM_SERVER_ALPHA }}
+          THUMBNAIL_SERVER: ${{ secrets.THUMBNAIL_SERVER_ALPHA }}
+          NON_CORS_PROXY_DOMAINS: ${{ secrets.NON_CORS_PROXY_DOMAINS_ALPHA }}
+          POSTGREST_SERVER: ${{ secrets.POSTGREST_SERVER_ALPHA }}
+
+      - name: Deploy S3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_ALPHA_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'ap-northeast-2'
+          SOURCE_DIR: 'dist'
