@@ -31,6 +31,21 @@ jobs:
           NON_CORS_PROXY_DOMAINS: ${{ secrets.NON_CORS_PROXY_DOMAINS_ALPHA }}
           POSTGREST_SERVER: ${{ secrets.POSTGREST_SERVER_ALPHA }}
 
+      - name: Admin Install
+        run: cd admin && npm ci
+
+      - name: Admin Build
+        run: cd admin && npm run build && cp -r dist/* ../dist/
+        env:
+          CORS_PROXY_SERVER: ${{ secrets.CORS_PROXY_SERVER_ALPHA }}
+          BASE_ASSETS_PATH: ${{ secrets.BASE_ASSETS_PATH_ALPHA }}
+          SHORTLINK_DOMAIN: ${{ secrets.SHORTLINK_DOMAIN_ALPHA }}
+          UPLOADS_HOST: ${{ secrets.UPLOADS_HOST_ALPHA }}
+          RETICULUM_SERVER: ${{ secrets.RETICULUM_SERVER_ALPHA }}
+          THUMBNAIL_SERVER: ${{ secrets.THUMBNAIL_SERVER_ALPHA }}
+          NON_CORS_PROXY_DOMAINS: ${{ secrets.NON_CORS_PROXY_DOMAINS_ALPHA }}
+          POSTGREST_SERVER: ${{ secrets.POSTGREST_SERVER_ALPHA }}
+
       - name: Deploy S3
         uses: jakejarvis/s3-sync-action@master
         with:
