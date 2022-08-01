@@ -117,7 +117,7 @@ export const SCHEMA = {
         preferredSpeakers: { type: "string", default: NO_DEVICE_ID },
         preferredCamera: { type: "string", default: NO_DEVICE_ID },
         muteMicOnEntry: { type: "bool", default: false },
-        disableLeftRightPanning: { type: "bool", default: false },
+        disableLeftRightPanning: { type: "bool", default: detectMobile() },
         audioNormalization: { type: "bool", default: 0.0 },
         invertTouchscreenCameraMove: { type: "bool", default: true },
         enableOnScreenJoystickLeft: { type: "bool", default: detectMobile() },
