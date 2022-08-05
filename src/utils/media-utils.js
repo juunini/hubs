@@ -10,9 +10,6 @@ import { isIOS as detectIOS } from "./is-mobile";
 import Linkify from "linkify-it";
 import tlds from "tlds";
 import { mediaTypeFor } from "./media-type";
-
-import { qsGet } from "./qs_truthy";
-const shareMediaTarget = qsGet("shareMediaTarget");
 import anime from "animejs";
 
 export const MediaType = {
@@ -202,9 +199,8 @@ export const addMedia = (
 
   entity.object3D.matrixNeedsUpdate = true;
 
-  shareMediaTarget
-    ? document.querySelector(`[${shareMediaTarget}]`).appendChild(entity)
-    : (parentEl || scene).appendChild(entity);
+  const chalkboard = document.querySelector("[chalkboard]");
+  chalkboard ? chalkboard.appendChild(entity) : (parentEl || scene).appendChild(entity);
 
   const orientation = new Promise(function (resolve) {
     if (needsToBeUploaded) {

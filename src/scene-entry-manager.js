@@ -11,9 +11,6 @@ const isMobileVR = AFRAME.utils.device.isMobileVR();
 const isDebug = qsTruthy("debug");
 const qs = new URLSearchParams(location.search);
 
-import { qsGet } from "./utils/qs_truthy";
-const shareMediaTarget = qsGet("shareMediaTarget");
-
 import { addMedia } from "./utils/media-utils";
 import {
   isIn2DInterstitial,
@@ -213,7 +210,9 @@ export default class SceneEntryManager {
   };
 
   _setupMedia = () => {
-    const offset = shareMediaTarget ? { x: 0, y: 0, z: 0.001 } : { x: 0, y: 0, z: -1.5 };
+    const chalkboard = document.querySelector("[chalkboard]");
+    const offset = chalkboard ? { x: 0, y: 0, z: 0.001 } : { x: 0, y: 0, z: -1.5 };
+
     const spawnMediaInfrontOfPlayer = (src, contentOrigin) => {
       if (!this.hubChannel.can("spawn_and_move_media")) return;
       const { entity, orientation } = addMedia(
@@ -226,7 +225,7 @@ export default class SceneEntryManager {
       );
       orientation.then(or => {
         entity.setAttribute("offset-relative-to", {
-          target: shareMediaTarget ? document.querySelector(`[${shareMediaTarget}]`) : "#avatar-pov-node",
+          target: chalkboard || "#avatar-pov-node",
           offset,
           orientation: or
         });
