@@ -210,8 +210,8 @@ export default class SceneEntryManager {
   };
 
   _setupMedia = () => {
-    const chalkboard = document.querySelector("[chalkboard]");
-    const offset = chalkboard ? { x: 0, y: 0, z: 0.001 } : { x: 0, y: 0, z: -1.5 };
+    const sharedScreen = document.querySelector("[shared-screen]");
+    const offset = sharedScreen ? { x: 0, y: 0, z: 0.001 } : { x: 0, y: 0, z: -1.5 };
 
     const spawnMediaInfrontOfPlayer = (src, contentOrigin) => {
       if (!this.hubChannel.can("spawn_and_move_media")) return;
@@ -225,7 +225,7 @@ export default class SceneEntryManager {
       );
       orientation.then(or => {
         entity.setAttribute("offset-relative-to", {
-          target: chalkboard || "#avatar-pov-node",
+          target: sharedScreen || "#avatar-pov-node",
           offset,
           orientation: or
         });

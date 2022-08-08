@@ -199,8 +199,8 @@ export const addMedia = (
 
   entity.object3D.matrixNeedsUpdate = true;
 
-  const chalkboard = document.querySelector("[chalkboard]");
-  chalkboard ? chalkboard.appendChild(entity) : (parentEl || scene).appendChild(entity);
+  const sharedScreen = document.querySelector("[shared-screen]");
+  sharedScreen ? sharedScreen.appendChild(entity) : (parentEl || scene).appendChild(entity);
 
   const orientation = new Promise(function (resolve) {
     if (needsToBeUploaded) {
