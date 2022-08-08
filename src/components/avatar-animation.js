@@ -1,3 +1,7 @@
+import { paths } from "../systems/userinput/paths";
+
+const CLOCK = new THREE.Clock();
+
 /**
  * @typedef {"Idle"} IDLE
  * @typedef {"Walking"} WALKING
@@ -29,12 +33,19 @@ AFRAME.registerComponent("avatar-animation", {
 
   /** @private @type { THREE.AnimationMixer } */
   _mixer: null,
-  /** @private @type { THREE.Clock } */
-  _clock: new THREE.Clock(),
+  /** @private @type { boolean } */
+  _isMe: false,
+
+  schema: {
+    front: { default: 0 },
+    right: { default: 0 }
+  },
 
   init() {
     this.animations = new Map();
     this._mixer = new THREE.AnimationMixer(this.el.object3D.parent);
+    this._userinput = AFRAME.scenes[0].systems.userinput;
+    this._isMe = this.el.parentElement.parentElement.parentElement.id === "avatar-rig";
 
     this.el.object3D.parent.animations.forEach(animation => {
       this.animations.set(animation.name, this._mixer.clipAction(animation));
@@ -46,6 +57,60 @@ AFRAME.registerComponent("avatar-animation", {
   },
 
   tick() {
-    this._mixer.update(this._clock.getDelta());
+    this._mixer.update(CLOCK.getDelta());
+
+    this._resetAll();
+    this._walking();
+
+    if (this._isMe) {
+      const [right, front] = this._userinput.get(paths.actions.characterAcceleration);
+      this.el.setAttribute("avatar-animation", { front, right });
+    }
+
+    if (this._isStopped()) {
+      this._idle();
+      return;
+    }
+
+    this._resetAll();
+    this._walking();
+  },
+
+  /**
+   * @private
+   * @param { string[] } names
+   */
+  _reset(...names) {
+    names.forEach(name => this.animations.get(name)?.setEffectiveWeight(0));
+  },
+
+  /**
+   * @private
+   * @param { string[] } ignore - list of ignore to reset animation
+   */
+  _resetAll(...ignore) {
+    this.animations.forEach(animation => {
+      if (ignore.includes(animation.name)) {
+        return;
+      }
+
+      animation.setEffectiveWeight(0);
+    });
+  },
+
+  _idle() {
+    this._resetAll(ANIMATIONS.IDLE);
+    this.animations.get(ANIMATIONS.IDLE)?.setEffectiveWeight(1);
+  },
+
+  _isStopped() {
+    return this.data.front === 0 && this.data.right === 0;
+  },
+
+  _walking() {
+    this.animations.get(ANIMATIONS.WALKING)?.setEffectiveWeight(this.data.front);
+    this.animations.get(ANIMATIONS.WALKING_BACKWARD)?.setEffectiveWeight(-this.data.front);
+    this.animations.get(ANIMATIONS.WALKING_LEFT)?.setEffectiveWeight(-this.data.right);
+    this.animations.get(ANIMATIONS.WALKING_RIGHT)?.setEffectiveWeight(this.data.right);
   }
 });
