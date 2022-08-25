@@ -203,7 +203,7 @@ class UIRoot extends Component {
     presenceCount: 0,
     chatInputEffect: () => {},
 
-    shareScreenPermitted: window.XRCLOUD.permissions.share_screen || window.XRCLOUD.permissions.admin_share_screen
+    shareScreenPermitted: window.XRCLOUD?.permissions?.share_screen || window.XRCLOUD?.permissions?.admin_share_screen
   };
 
   constructor(props) {
