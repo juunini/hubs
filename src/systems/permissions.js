@@ -11,7 +11,11 @@ AFRAME.registerSystem("permissions", {
     }
   },
   can(permissionName) {
-    return !!window.APP.hubChannel.can(permissionName) || window.XRCLOUD?.permissions?.[permissionName];
+    return (
+      !!window.APP.hubChannel.can(permissionName) ||
+      window.XRCLOUD?.permissions?.[permissionName] ||
+      window.XRCLOUD?.adminPermissions?.[permissionName]
+    );
   },
   canOrWillIfCreator(permissionName) {
     return (

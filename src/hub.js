@@ -1272,8 +1272,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
   hubPhxChannel.on("message", ({ session_id, type, body, from }) => {
-    if (type == "share_screen") {
-      body === NAF.clientId && window.dispatchEvent(new CustomEvent("share_screen"));
+    if (type === "grant_share_screen") {
+      body === NAF.clientId && window.dispatchEvent(new CustomEvent("share_screen", { detail: { isOn: true } }));
+      return;
+    }
+
+    if (type === "revoke_share_screen") {
+      body === NAF.clientId && window.dispatchEvent(new CustomEvent("share_screen", { detail: { isOn: false } }));
       return;
     }
 

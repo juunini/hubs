@@ -23,7 +23,7 @@ const HUB_CREATOR_PERMISSIONS = [
   "close_hub",
   "mute_users",
   "kick_users",
-  "admin_share_screen",
+  "grant_share_screen",
   "amplify_audio"
 ];
 const VALID_PERMISSIONS = HUB_CREATOR_PERMISSIONS.concat([
@@ -57,7 +57,11 @@ export default class HubChannel extends EventTarget {
   // Returns true if this current session has the given permission.
   can(permission) {
     if (!VALID_PERMISSIONS.includes(permission)) throw new Error(`Invalid permission name: ${permission}`);
-    return (this._permissions && this._permissions[permission]) || window.XRCLOUD?.permissions?.[permission];
+    return (
+      (this._permissions && this._permissions[permission]) ||
+      window.XRCLOUD?.permissions?.[permission] ||
+      window.XRCLOUD?.admin_permissions?.[permission]
+    );
   }
 
   userCan(clientId, permission) {
@@ -433,7 +437,8 @@ export default class HubChannel extends EventTarget {
     });
   };
 
-  shareScreen = sessionId => this.channel.push("message", { type: "share_screen", body: sessionId });
+  grantShareScreen = sessionId => this.channel.push("message", { type: "grant_share_screen", body: sessionId });
+  revokeShareScreen = sessionId => this.channel.push("message", { type: "revoke_share_screen", body: sessionId });
 
   mute = sessionId => this.channel.push("mute", { session_id: sessionId });
   addOwner = sessionId => this.channel.push("add_owner", { session_id: sessionId });

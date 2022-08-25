@@ -40,7 +40,8 @@ export function UserProfileSidebar({
   onBack,
   onClose,
   canShare,
-  onShare,
+  onGrantShare,
+  onRevokeShare,
   ...rest
 }) {
   const intl = useIntl();
@@ -142,9 +143,20 @@ export function UserProfileSidebar({
           </Button>
         )}
         {canShare && (
-          <Button preset="accept" onClick={onShare}>
-            <FormattedMessage id="user-profile-sidebar.share-screen-button" defaultMessage="ShareScreen" />
-          </Button>
+          <>
+            <Button preset="accept" onClick={onGrantShare}>
+              <FormattedMessage
+                id="user-profile-sidebar.grant-share-screen-button"
+                defaultMessage="Grant Screen Sharing"
+              />
+            </Button>
+            <Button preset="cancel" onClick={onRevokeShare}>
+              <FormattedMessage
+                id="user-profile-sidebar.revoke-share-screen-button"
+                defaultMessage="Revoke Screen Sharing"
+              />
+            </Button>
+          </>
         )}
       </Column>
     </Sidebar>
@@ -174,5 +186,6 @@ UserProfileSidebar.propTypes = {
   onBack: PropTypes.func,
   onClose: PropTypes.func,
   canShare: PropTypes.bool,
-  onShare: PropTypes.func
+  onGrantShare: PropTypes.func,
+  onRevokeShare: PropTypes.func
 };
