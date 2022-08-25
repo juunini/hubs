@@ -31,6 +31,7 @@ export function UserProfileSidebarContainer({
   const isSignedIn = !!roles.signed_in;
   const mayAddOwner = hubChannel.canOrWillIfCreator("update_roles") && !isOwner && !isCreator;
   const mayRemoveOwner = hubChannel.canOrWillIfCreator("update_roles") && isOwner && !isCreator;
+  const mayShare = hubChannel.canOrWillIfCreator("admin_share_screen");
   const [isHidden, setIsHidden] = useState(hubChannel.isHidden(user.id));
 
   useEffect(
@@ -117,6 +118,17 @@ export function UserProfileSidebarContainer({
     [performConditionalSignIn, hubChannel, userId, onClose, onBack]
   );
 
+  const shareScreen = useCallback(
+    () => {
+      performConditionalSignIn(
+        () => hubChannel.can("admin_share_screen"),
+        async () => await hubChannel.shareScreen(userId),
+        SignInMessages.shareScreen
+      );
+    },
+    [performConditionalSignIn, hubChannel, userId]
+  );
+
   return (
     <UserProfileSidebar
       userId={user.id}
@@ -139,6 +151,8 @@ export function UserProfileSidebarContainer({
       onClose={onClose}
       onBack={onBack}
       hasMicPresence={hasMicPresence}
+      canShare={mayShare}
+      onShare={shareScreen}
     />
   );
 }

@@ -201,7 +201,9 @@ class UIRoot extends Component {
     objectSrc: "",
     sidebarId: null,
     presenceCount: 0,
-    chatInputEffect: () => {}
+    chatInputEffect: () => {},
+
+    shareScreenPermitted: window.XRCLOUD.permissions.share_screen || window.XRCLOUD.permissions.admin_share_screen
   };
 
   constructor(props) {
@@ -279,6 +281,10 @@ class UIRoot extends Component {
     }
   }
 
+  onShareScreen = () => {
+    this.setState({ shareScreenPermitted: !this.state.shareScreenPermitted });
+  };
+
   onConcurrentLoad = () => {
     if (qsTruthy("allow_multi") || this.props.store.state.preferences.allowMultipleHubsInstances) return;
     this.startAutoExitTimer(AutoExitReason.concurrentSession);
@@ -301,6 +307,7 @@ class UIRoot extends Component {
   };
 
   componentDidMount() {
+    window.addEventListener("share_screen", this.onShareScreen);
     window.addEventListener("concurrentload", this.onConcurrentLoad);
     window.addEventListener("idle_detected", this.onIdleDetected);
     window.addEventListener("activity_detected", this.onActivityDetected);
@@ -392,6 +399,7 @@ class UIRoot extends Component {
     this.props.scene.removeEventListener("share_video_failed", this.onShareVideoFailed);
     this.props.scene.removeEventListener("action_media_tweet", this.onTweet);
     this.props.store.removeEventListener("statechanged", this.storeUpdated);
+    window.removeEventListener("share_screen", this.onShareScreen);
     window.removeEventListener("concurrentload", this.onConcurrentLoad);
     window.removeEventListener("idle_detected", this.onIdleDetected);
     window.removeEventListener("activity_detected", this.onActivityDetected);
@@ -1005,6 +1013,7 @@ class UIRoot extends Component {
 
     if (this.props.showInterstitialPrompt) return this.renderInterstitialPrompt();
 
+    const shareScreenPermitted = this.state.shareScreenPermitted;
     const entered = this.state.entered;
     const watching = this.state.watching;
     const enteredOrWatching = entered || watching;
@@ -1563,7 +1572,9 @@ class UIRoot extends Component {
                     {entered && (
                       <>
                         <AudioPopoverContainer scene={this.props.scene} />
-                        <SharePopoverContainer scene={this.props.scene} hubChannel={this.props.hubChannel} />
+                        {shareScreenPermitted && (
+                          <SharePopoverContainer scene={this.props.scene} hubChannel={this.props.hubChannel} />
+                        )}
                         <PlacePopoverContainer
                           scene={this.props.scene}
                           hubChannel={this.props.hubChannel}

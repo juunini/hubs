@@ -39,6 +39,8 @@ export function UserProfileSidebar({
   showBackButton,
   onBack,
   onClose,
+  canShare,
+  onShare,
   ...rest
 }) {
   const intl = useIntl();
@@ -139,6 +141,11 @@ export function UserProfileSidebar({
             <FormattedMessage id="user-profile-sidebar.kick-button" defaultMessage="Kick" />
           </Button>
         )}
+        {canShare && (
+          <Button preset="accept" onClick={onShare}>
+            <FormattedMessage id="user-profile-sidebar.share-screen-button" defaultMessage="ShareScreen" />
+          </Button>
+        )}
       </Column>
     </Sidebar>
   );
@@ -165,5 +172,7 @@ UserProfileSidebar.propTypes = {
   onKick: PropTypes.func,
   showBackButton: PropTypes.bool,
   onBack: PropTypes.func,
-  onClose: PropTypes.func
+  onClose: PropTypes.func,
+  canShare: PropTypes.bool,
+  onShare: PropTypes.func
 };
