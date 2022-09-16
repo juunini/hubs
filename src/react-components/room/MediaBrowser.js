@@ -23,7 +23,8 @@ const navTitleMessages = defineMessages({
   scenes: { id: "media-browser.nav_title.scenes", defaultMessage: "Scenes" },
   avatars: { id: "media-browser.nav_title.avatars", defaultMessage: "Avatars" },
   sketchfab: { id: "media-browser.nav_title.sketchfab", defaultMessage: "Sketchfab" },
-  twitch: { id: "media-browser.nav_title.twitch", defaultMessage: "Twitch" }
+  twitch: { id: "media-browser.nav_title.twitch", defaultMessage: "Twitch" },
+  customTitle: { id: "media-browser.nav_title.custom-title", defaultMessage: "" }
 });
 
 export function MediaBrowser({
@@ -52,6 +53,7 @@ export function MediaBrowser({
   children
 }) {
   const intl = useIntl();
+  const customObjectTabsTitles = Object.keys(window.XRCLOUD?.customObjectTabs || {});
 
   return (
     <FullscreenLayout
@@ -99,7 +101,7 @@ export function MediaBrowser({
               preset={selectedSource === source ? "primary" : "transparent"}
               onClick={() => onSelectSource(source)}
             >
-              {intl.formatMessage(navTitleMessages[source])}
+              {customObjectTabsTitles.includes(source) ? source : intl.formatMessage(navTitleMessages[source])}
             </Button>
           ))}
         </div>

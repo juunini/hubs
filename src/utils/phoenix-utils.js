@@ -172,7 +172,27 @@ export function getLandingPageForPhoto(photoUrl) {
   return getReticulumFetchUrl(parsedUrl.pathname.replace(".png", ".html") + parsedUrl.search, true);
 }
 
-export function fetchReticulumAuthenticated(url, method = "GET", payload) {
+function isCustomTab(source) {
+  return window.XRCLOUD?.customObjectTabs && Object.values(window.XRCLOUD?.customObjectTabs).includes(source);
+}
+
+function customTabData(source, param) {
+  const url = Object.values(window.XRCLOUD?.customObjectTabs).find(url => source === url);
+
+  return fetch(param ? `${url}search?q=${param}` : url)
+    .then(response => response.json())
+    .catch(err => console.error(err));
+}
+
+export async function fetchReticulumAuthenticated(url, method = "GET", payload) {
+  const searchParams = new URLSearchParams(url);
+  const param = searchParams.get("/api/v1/media/search?q");
+  const source = param ? searchParams.get("source") : searchParams.get("/api/v1/media/search?source");
+
+  if (isCustomTab(source)) {
+    return await customTabData(source, param);
+  }
+
   const { token } = window.APP.store.state.credentials;
   const retUrl = getReticulumFetchUrl(url);
   const params = {
