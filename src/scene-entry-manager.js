@@ -265,14 +265,6 @@ export default class SceneEntryManager {
       );
     });
 
-    this.scene.addEventListener("action_apply_mute", ({ detail: { clientId } }) => {
-      this.performConditionalSignIn(
-        () => this.hubChannel.can("apply_mute"),
-        async () => await window.APP.hubChannel.applyMute(clientId),
-        SignInMessages.applyMute
-      );
-    });
-
     this.scene.addEventListener("action_mute_client", ({ detail: { clientId } }) => {
       this.performConditionalSignIn(
         () => this.hubChannel.can("mute_users"),
