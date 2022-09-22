@@ -152,11 +152,11 @@ export function UserProfileSidebarContainer({
     [performConditionalSignIn, hubChannel, userId]
   );
 
-  const unmute = useCallback(
+  const cancelMute = useCallback(
     () => {
       performConditionalSignIn(
         () => hubChannel.can("apply_mute"),
-        async () => await hubChannel.unmute(userId),
+        async () => await hubChannel.cancelMute(userId),
         SignInMessages.applyMute
       );
     },
@@ -190,7 +190,7 @@ export function UserProfileSidebarContainer({
       onRevokeShare={revokeShareScreen}
       canApplyMute={mayApplyMute}
       onApplyMute={applyMute}
-      onUnmute={unmute}
+      onCancelMute={cancelMute}
     />
   );
 }

@@ -44,7 +44,7 @@ export function UserProfileSidebar({
   onRevokeShare,
   canApplyMute,
   onApplyMute,
-  onUnmute,
+  onCancelMute,
   ...rest
 }) {
   const intl = useIntl();
@@ -166,8 +166,8 @@ export function UserProfileSidebar({
             <Button preset="cancel" onClick={onApplyMute}>
               <FormattedMessage id="user-profile-sidebar.apply-mute-button" defaultMessage="Mute user" />
             </Button>
-            <Button preset="accept" onClick={onUnmute}>
-              <FormattedMessage id="user-profile-sidebar.unmute-button" defaultMessage="Unmute user" />
+            <Button preset="accept" onClick={onCancelMute}>
+              <FormattedMessage id="user-profile-sidebar.cancel-mute-button" defaultMessage="Cancle muted user" />
             </Button>
           </>
         )}
@@ -203,5 +203,5 @@ UserProfileSidebar.propTypes = {
   onRevokeShare: PropTypes.func,
   canApplyMute: PropTypes.bool,
   onApplyMute: PropTypes.func,
-  onUnmute: PropTypes.func
+  onCancelMute: PropTypes.func
 };

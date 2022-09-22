@@ -1289,7 +1289,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    if (type === "unmute" && body === NAF.clientId) {
+    if (type === "cancel_mute" && body === NAF.clientId) {
       window.dispatchEvent(new CustomEvent("apply_mute", { detail: { isOn: false } }));
       APP.mediaDevicesManager.micEnabled = true;
       return;

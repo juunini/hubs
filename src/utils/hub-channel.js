@@ -442,7 +442,7 @@ export default class HubChannel extends EventTarget {
   revokeShareScreen = sessionId => this.channel.push("message", { type: "revoke_share_screen", body: sessionId });
 
   applyMute = sessionId => this.channel.push("message", { type: "apply_mute", body: sessionId });
-  unmute = sessionId => this.channel.push("message", { type: "unmute", body: sessionId });
+  cancelMute = sessionId => this.channel.push("message", { type: "cancel_mute", body: sessionId });
 
   mute = sessionId => this.channel.push("mute", { session_id: sessionId });
   addOwner = sessionId => this.channel.push("add_owner", { session_id: sessionId });
