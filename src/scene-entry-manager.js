@@ -257,14 +257,6 @@ export default class SceneEntryManager {
       );
     });
 
-    this.scene.addEventListener("action_share_screen_client", ({ detail: { clientId } }) => {
-      this.performConditionalSignIn(
-        () => this.hubChannel.can("share_screen"),
-        async () => await window.APP.hubChannel.shareScreen(clientId),
-        SignInMessages.shareScreen
-      );
-    });
-
     this.scene.addEventListener("action_mute_client", ({ detail: { clientId } }) => {
       this.performConditionalSignIn(
         () => this.hubChannel.can("mute_users"),
