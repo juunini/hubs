@@ -43,6 +43,10 @@ export const SignInMessages = defineMessages({
     id: "sign-in-modal.signin-message.share-screen",
     defaultMessage: "You'll need to sign in to block the share screen for other users."
   },
+  applyMute: {
+    id: "sign-in-modal.signin-message.apply-mute",
+    defaultMessage: "You'll need to sign in to mute/unmute other users."
+  },
   kickUser: {
     id: "sign-in-modal.signin-message.kick-user",
     defaultMessage: "You'll need to sign in to kick other users."

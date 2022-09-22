@@ -42,6 +42,9 @@ export function UserProfileSidebar({
   canShare,
   onGrantShare,
   onRevokeShare,
+  canApplyMute,
+  onApplyMute,
+  onUnmute,
   ...rest
 }) {
   const intl = useIntl();
@@ -158,6 +161,16 @@ export function UserProfileSidebar({
             </Button>
           </>
         )}
+        {canApplyMute && (
+          <>
+            <Button preset="cancel" onClick={onApplyMute}>
+              <FormattedMessage id="user-profile-sidebar.apply-mute-button" defaultMessage="Mute user" />
+            </Button>
+            <Button preset="accept" onClick={onUnmute}>
+              <FormattedMessage id="user-profile-sidebar.unmute-button" defaultMessage="Unmute user" />
+            </Button>
+          </>
+        )}
       </Column>
     </Sidebar>
   );
@@ -187,5 +200,8 @@ UserProfileSidebar.propTypes = {
   onClose: PropTypes.func,
   canShare: PropTypes.bool,
   onGrantShare: PropTypes.func,
-  onRevokeShare: PropTypes.func
+  onRevokeShare: PropTypes.func,
+  canApplyMute: PropTypes.bool,
+  onApplyMute: PropTypes.func,
+  onUnmute: PropTypes.func
 };

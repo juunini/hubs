@@ -203,7 +203,8 @@ class UIRoot extends Component {
     presenceCount: 0,
     chatInputEffect: () => {},
 
-    shareScreenPermitted: window.XRCLOUD?.permissions?.share_screen
+    shareScreenPermitted: window.XRCLOUD?.permissions?.share_screen,
+    isMute: false
   };
 
   constructor(props) {
@@ -281,6 +282,10 @@ class UIRoot extends Component {
     }
   }
 
+  onApplyMute = e => {
+    this.setState({ isMute: e.detail.isOn });
+  };
+
   onShareScreen = e => {
     this.setState({ shareScreenPermitted: e.detail.isOn });
   };
@@ -307,6 +312,7 @@ class UIRoot extends Component {
   };
 
   componentDidMount() {
+    window.addEventListener("apply_mute", this.onApplyMute);
     window.addEventListener("share_screen", this.onShareScreen);
     window.addEventListener("concurrentload", this.onConcurrentLoad);
     window.addEventListener("idle_detected", this.onIdleDetected);
@@ -1013,6 +1019,7 @@ class UIRoot extends Component {
 
     if (this.props.showInterstitialPrompt) return this.renderInterstitialPrompt();
 
+    const isMute = this.state.isMute;
     const shareScreenPermitted = this.state.shareScreenPermitted;
     const entered = this.state.entered;
     const watching = this.state.watching;
@@ -1571,7 +1578,7 @@ class UIRoot extends Component {
                     )}
                     {entered && (
                       <>
-                        <AudioPopoverContainer scene={this.props.scene} />
+                        {!isMute && <AudioPopoverContainer scene={this.props.scene} />}
                         {shareScreenPermitted && (
                           <SharePopoverContainer scene={this.props.scene} hubChannel={this.props.hubChannel} />
                         )}

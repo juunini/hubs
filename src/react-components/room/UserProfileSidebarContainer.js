@@ -32,6 +32,7 @@ export function UserProfileSidebarContainer({
   const mayAddOwner = hubChannel.canOrWillIfCreator("update_roles") && !isOwner && !isCreator;
   const mayRemoveOwner = hubChannel.canOrWillIfCreator("update_roles") && isOwner && !isCreator;
   const mayShare = hubChannel.canOrWillIfCreator("grant_share_screen");
+  const mayApplyMute = hubChannel.canOrWillIfCreator("apply_mute");
   const [isHidden, setIsHidden] = useState(hubChannel.isHidden(user.id));
 
   useEffect(
@@ -140,6 +141,28 @@ export function UserProfileSidebarContainer({
     [performConditionalSignIn, hubChannel, userId]
   );
 
+  const applyMute = useCallback(
+    () => {
+      performConditionalSignIn(
+        () => hubChannel.can("apply_mute"),
+        async () => await hubChannel.applyMute(userId),
+        SignInMessages.applyMute
+      );
+    },
+    [performConditionalSignIn, hubChannel, userId]
+  );
+
+  const unmute = useCallback(
+    () => {
+      performConditionalSignIn(
+        () => hubChannel.can("apply_mute"),
+        async () => await hubChannel.unmute(userId),
+        SignInMessages.applyMute
+      );
+    },
+    [performConditionalSignIn, hubChannel, userId]
+  );
+
   return (
     <UserProfileSidebar
       userId={user.id}
@@ -165,6 +188,9 @@ export function UserProfileSidebarContainer({
       canShare={mayShare}
       onGrantShare={grantShareScreen}
       onRevokeShare={revokeShareScreen}
+      canApplyMute={mayApplyMute}
+      onApplyMute={applyMute}
+      onUnmute={unmute}
     />
   );
 }

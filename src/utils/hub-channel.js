@@ -24,6 +24,7 @@ const HUB_CREATOR_PERMISSIONS = [
   "mute_users",
   "kick_users",
   "grant_share_screen",
+  "apply_mute",
   "amplify_audio"
 ];
 const VALID_PERMISSIONS = HUB_CREATOR_PERMISSIONS.concat([
@@ -439,6 +440,9 @@ export default class HubChannel extends EventTarget {
 
   grantShareScreen = sessionId => this.channel.push("message", { type: "grant_share_screen", body: sessionId });
   revokeShareScreen = sessionId => this.channel.push("message", { type: "revoke_share_screen", body: sessionId });
+
+  applyMute = sessionId => this.channel.push("message", { type: "apply_mute", body: sessionId });
+  unmute = sessionId => this.channel.push("message", { type: "unmute", body: sessionId });
 
   mute = sessionId => this.channel.push("mute", { session_id: sessionId });
   addOwner = sessionId => this.channel.push("add_owner", { session_id: sessionId });

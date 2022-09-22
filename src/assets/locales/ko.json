@@ -466,6 +466,8 @@
   "user-profile-sidebar.demote-button-disabled-label": "{displayName} 님이 로그아웃 하셨습니다.",
   "user-profile-sidebar.grant-share-screen-button": "화면 공유 권한 부여",
   "user-profile-sidebar.revoke-share-screen-button": "화면 공유 권한 회수",
+  "user-profile-sidebar.apply-mute-button": "음소거",
+  "user-profile-sidebar.unmute-button": "음소거 해제",
   "promote-client-modal.message": "관리자로 임명하면 Room 설정 및 관리 도구에 대한 전체 권한이 부여됩니다.{linebreak}관리자로 임명하시겠습니까?",
   "promote-client-modal.confirm-prefix": "네, {name} 님을 관리자로 임명합니다.",
   "audio-debug-panel.audio-debug-avatar-title": "아바타",
