@@ -86,7 +86,6 @@ import "./components/text-button";
 import "./components/block-button";
 import "./components/mute-button";
 import "./components/kick-button";
-import "./components/share-screen-button";
 import "./components/close-vr-notice-button";
 import "./components/leave-room-button";
 import "./components/visible-if-permitted";
