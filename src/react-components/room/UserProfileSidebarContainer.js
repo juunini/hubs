@@ -33,6 +33,7 @@ export function UserProfileSidebarContainer({
   const mayRemoveOwner = hubChannel.canOrWillIfCreator("update_roles") && isOwner && !isCreator;
   const mayShare = hubChannel.canOrWillIfCreator("grant_share_screen");
   const mayApplyMute = hubChannel.canOrWillIfCreator("apply_mute");
+  const mayFreeze = hubChannel.canOrWillIfCreator("freeze");
   const [isHidden, setIsHidden] = useState(hubChannel.isHidden(user.id));
 
   useEffect(
@@ -163,6 +164,28 @@ export function UserProfileSidebarContainer({
     [performConditionalSignIn, hubChannel, userId]
   );
 
+  const freeze = useCallback(
+    () => {
+      performConditionalSignIn(
+        () => hubChannel.can("freeze"),
+        async () => await hubChannel.freeze(userId),
+        SignInMessages.freeze
+      );
+    },
+    [performConditionalSignIn, hubChannel, userId]
+  );
+
+  const unfreeze = useCallback(
+    () => {
+      performConditionalSignIn(
+        () => hubChannel.can("freeze"),
+        async () => await hubChannel.unfreeze(userId),
+        SignInMessages.freeze
+      );
+    },
+    [performConditionalSignIn, hubChannel, userId]
+  );
+
   return (
     <UserProfileSidebar
       userId={user.id}
@@ -191,6 +214,9 @@ export function UserProfileSidebarContainer({
       canApplyMute={mayApplyMute}
       onApplyMute={applyMute}
       onCancelMute={cancelMute}
+      canFreeze={mayFreeze}
+      onFreeze={freeze}
+      onUnfreeze={unfreeze}
     />
   );
 }

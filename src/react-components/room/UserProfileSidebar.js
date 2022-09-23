@@ -45,6 +45,9 @@ export function UserProfileSidebar({
   canApplyMute,
   onApplyMute,
   onCancelMute,
+  canFreeze,
+  onFreeze,
+  onUnfreeze,
   ...rest
 }) {
   const intl = useIntl();
@@ -171,6 +174,16 @@ export function UserProfileSidebar({
             </Button>
           </>
         )}
+        {canFreeze && (
+          <>
+            <Button preset="cancel" onClick={onFreeze}>
+              <FormattedMessage id="user-profile-sidebar.freeze-button" defaultMessage="Freeze user" />
+            </Button>
+            <Button preset="accept" onClick={onUnfreeze}>
+              <FormattedMessage id="user-profile-sidebar.unfreeze-button" defaultMessage="Unfreeze user" />
+            </Button>
+          </>
+        )}
       </Column>
     </Sidebar>
   );
@@ -203,5 +216,8 @@ UserProfileSidebar.propTypes = {
   onRevokeShare: PropTypes.func,
   canApplyMute: PropTypes.bool,
   onApplyMute: PropTypes.func,
-  onCancelMute: PropTypes.func
+  onCancelMute: PropTypes.func,
+  canFreeze: PropTypes.bool,
+  onFreeze: PropTypes.func,
+  onUnfreeze: PropTypes.func
 };

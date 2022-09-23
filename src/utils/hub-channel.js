@@ -25,6 +25,7 @@ const HUB_CREATOR_PERMISSIONS = [
   "kick_users",
   "grant_share_screen",
   "apply_mute",
+  "freeze",
   "amplify_audio"
 ];
 const VALID_PERMISSIONS = HUB_CREATOR_PERMISSIONS.concat([
@@ -443,6 +444,9 @@ export default class HubChannel extends EventTarget {
 
   applyMute = sessionId => this.channel.push("message", { type: "apply_mute", body: sessionId });
   cancelMute = sessionId => this.channel.push("message", { type: "cancel_mute", body: sessionId });
+
+  freeze = sessionId => this.channel.push("message", { type: "freeze", body: sessionId });
+  unfreeze = sessionId => this.channel.push("message", { type: "unfreeze", body: sessionId });
 
   mute = sessionId => this.channel.push("mute", { session_id: sessionId });
   addOwner = sessionId => this.channel.push("add_owner", { session_id: sessionId });

@@ -16,6 +16,16 @@ AFRAME.registerComponent("virtual-gamepad-controls", {
   schema: {},
 
   init() {
+    window.addEventListener("mobile-freeze", () => {
+      this.leftStick[0].ui.el.style.visibility = "hidden";
+      this.rightStick[0].ui.el.style.visibility = "hidden";
+    });
+
+    window.addEventListener("mobile-unfreeze", () => {
+      this.leftStick[0].ui.el.style.visibility = "visible";
+      this.rightStick[0].ui.el.style.visibility = "visible";
+    });
+
     this.characterController = this.el.sceneEl.systems["hubs-systems"].characterController;
 
     this.onEnterVr = this.onEnterVr.bind(this);

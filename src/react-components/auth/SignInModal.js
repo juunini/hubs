@@ -47,6 +47,10 @@ export const SignInMessages = defineMessages({
     id: "sign-in-modal.signin-message.apply-mute",
     defaultMessage: "You'll need to sign in to mute/unmute other users."
   },
+  freeze: {
+    id: "sign-in-modal.signin-message.unfreeze",
+    defaultMessage: "You'll need to sign in to freeze/unfreeze other users."
+  },
   kickUser: {
     id: "sign-in-modal.signin-message.kick-user",
     defaultMessage: "You'll need to sign in to kick other users."

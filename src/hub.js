@@ -1,3 +1,4 @@
+import detectMobile from "./utils/is-mobile";
 import {
   getCurrentHubId,
   updateVRHudPresenceCount,
@@ -1291,6 +1292,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (type === "cancel_mute" && body === NAF.clientId) {
       window.dispatchEvent(new CustomEvent("apply_mute", { detail: { isOn: false } }));
       APP.mediaDevicesManager.micEnabled = true;
+      return;
+    }
+
+    if (type === "freeze" && body === NAF.clientId) {
+      if (detectMobile()) {
+        window.dispatchEvent(new CustomEvent("mobile-freeze"));
+      }
+      window.dispatchEvent(new CustomEvent("freeze"));
+      return;
+    }
+
+    if (type === "unfreeze" && body === NAF.clientId) {
+      if (detectMobile()) {
+        window.dispatchEvent(new CustomEvent("mobile-unfreeze"));
+      }
+      window.dispatchEvent(new CustomEvent("unfreeze"));
       return;
     }
 

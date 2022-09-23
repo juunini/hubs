@@ -203,6 +203,17 @@ AFRAME.registerSystem("userinput", {
   },
 
   init() {
+    window.addEventListener("freeze", () => {
+      console.log(this.activeDevices.items);
+      if (!this.tempItems) this.tempItems = [...this.activeDevices.items];
+      this.activeDevices.items.length = 0;
+    });
+
+    window.addEventListener("unfreeze", () => {
+      if (this.tempItems) this.activeDevices.items = [...this.tempItems];
+      return;
+    });
+
     this.frame = {
       generation: 0,
       values: {},
