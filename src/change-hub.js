@@ -84,7 +84,7 @@ export async function changeHub(hubId, addToHistory = true) {
 
   await Promise.all([
     APP.dialog.connect({
-      serverUrl: `wss://${hub.host}:${hub.port}`,
+      serverUrl: `${hub.host.includes("localhost") ? "ws" : "wss"}://${hub.host}:${hub.port}`,
       roomId: hub.hub_id,
       serverParams: { host: hub.host, port: hub.port, turn: hub.turn },
       scene,

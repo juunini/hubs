@@ -52,7 +52,7 @@ export const scaledThumbnailUrlFor = (url, width, height) => {
   }
 
   // HACK: the extension is needed to ensure CDN caching on Cloudflare
-  const thumbnailUrl = `https://${configs.THUMBNAIL_SERVER}/thumbnail/${farsparkEncodeUrl(
+  const thumbnailUrl = `${configs.THUMBNAIL_SERVER}/thumbnail/${farsparkEncodeUrl(
     url
   )}${extension}?w=${width}&h=${height}`;
 
@@ -60,7 +60,7 @@ export const scaledThumbnailUrlFor = (url, width, height) => {
     const urlHostname = new URL(url).hostname;
 
     if (hasReticulumServer()) {
-      const retHostname = new URL(`https://${configs.RETICULUM_SERVER}`).hostname;
+      const retHostname = new URL(`${configs.RETICULUM_SERVER}`).hostname;
       if (retHostname === urlHostname) return url;
     }
   } catch (e) {
@@ -85,7 +85,7 @@ export const proxiedUrlFor = url => {
     // Ignore
   }
 
-  return `https://${configs.CORS_PROXY_SERVER}/${url}`;
+  return `${configs.CORS_PROXY_SERVER}/${url}`;
 };
 
 export function getAbsoluteUrl(baseUrl, relativeUrl) {
@@ -130,7 +130,7 @@ export const getCustomGLTFParserURLResolver = gltfUrl => url => {
 
   if (configs.CORS_PROXY_SERVER) {
     // For absolute paths with a CORS proxied gltf URL, re-write the url properly to be proxied
-    const corsProxyPrefix = `https://${configs.CORS_PROXY_SERVER}/`;
+    const corsProxyPrefix = `${configs.CORS_PROXY_SERVER}/`;
 
     if (gltfUrl.startsWith(corsProxyPrefix)) {
       const originalUrl = decodeURIComponent(gltfUrl.substring(corsProxyPrefix.length));

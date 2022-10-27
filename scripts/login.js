@@ -18,7 +18,7 @@ const ask = q => new Promise(res => rl.question(q, res));
     process.exit(1);
   }
 
-  const url = `https://${host}/api/v1/meta`;
+  const url = `${host}/api/v1/meta`;
   try {
     const res = await fetch(url);
     const meta = await res.json();
@@ -32,7 +32,7 @@ const ask = q => new Promise(res => rl.question(q, res));
   }
 
   configs.RETICULUM_SERVER = host;
-  configs.RETICULUM_SOCKET_PROTOCOL = "wss:";
+  configs.RETICULUM_SOCKET_PROTOCOL = host.includes("localhost") ? "ws:": "wss:";
 
   const socket = await connectToReticulum(false, null, Socket);
   const store = new Store();

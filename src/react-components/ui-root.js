@@ -697,7 +697,7 @@ class UIRoot extends Component {
   };
 
   onMiniInviteClicked = () => {
-    const link = `https://${configs.SHORTLINK_DOMAIN}/${this.props.hub.hub_id}`;
+    const link = `${configs.SHORTLINK_DOMAIN}/${this.props.hub.hub_id}`;
 
     this.setState({ miniInviteActivated: true });
     setTimeout(() => {
@@ -1546,14 +1546,6 @@ class UIRoot extends Component {
                   ) : undefined
                 }
                 modal={this.state.dialog}
-                toolbarLeft={
-                  <InvitePopoverContainer
-                    hub={this.props.hub}
-                    hubChannel={this.props.hubChannel}
-                    scene={this.props.scene}
-                    store={this.props.store}
-                  />
-                }
                 toolbarCenter={
                   <>
                     {watching && (

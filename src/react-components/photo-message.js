@@ -23,7 +23,7 @@ export default function PhotoMessage({ name, body: { src: url }, className, mayS
       },
       {
         shareHashtag: configs.translation("share-hashtag"),
-        url: `https://${configs.SHORTLINK_DOMAIN}/${hubId}`
+        url: `${configs.SHORTLINK_DOMAIN}/${hubId}`
       }
     )
   });

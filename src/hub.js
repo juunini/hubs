@@ -388,7 +388,7 @@ export async function getSceneUrlForHub(hub) {
 
 export async function updateEnvironmentForHub(hub, entryManager) {
   console.log("Updating environment for hub");
-  const sceneUrl = await getSceneUrlForHub(hub);
+  const sceneUrl = window.XRCLOUD?.sceneUrl || await getSceneUrlForHub(hub);
 
   const sceneErrorHandler = () => {
     remountUI({ roomUnavailableReason: ExitReason.sceneError });
@@ -582,7 +582,7 @@ function handleHubChannelJoined(entryManager, hubChannel, messageDispatch, data)
 
   scene.setAttribute("networked-scene", {
     room: hub.hub_id,
-    serverURL: `wss://${hub.host}:${hub.port}`, // TODO: This is confusing because this is the dialog host and port.
+    serverURL: `${hub.host.includes("localhost") ? "ws" : "wss"}://${hub.host}:${hub.port}`, // TODO: This is confusing because this is the dialog host and port.
     debug: !!isDebug,
     adapter: "phoenix"
   });
@@ -598,7 +598,7 @@ function handleHubChannelJoined(entryManager, hubChannel, messageDispatch, data)
       // Disconnect in case this is a re-entry
       APP.dialog.disconnect();
       APP.dialog.connect({
-        serverUrl: `wss://${hub.host}:${hub.port}`,
+        serverUrl: `${hub.host.includes("localhost") ? "ws" : "wss"}://${hub.host}:${hub.port}`,
         roomId: hub.hub_id,
         serverParams: { host: hub.host, port: hub.port, turn: hub.turn },
         scene,

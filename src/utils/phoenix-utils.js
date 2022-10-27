@@ -46,7 +46,7 @@ let invalidatedReticulumMetaThisSession = false;
 
 export function getReticulumFetchUrl(path, absolute = false, host = null, port = null) {
   if (host || hasReticulumServer()) {
-    return `https://${host || configs.RETICULUM_SERVER}${port ? `:${port}` : ""}${path}`;
+    return `${host || configs.RETICULUM_SERVER}${port ? `:${port}` : ""}${path}`;
   } else if (absolute) {
     resolverLink.href = path;
     return resolverLink.href;
@@ -63,7 +63,7 @@ export function getUploadsUrl(path, absolute = false, host = null, port = null) 
   const isUsingCloudflare = configs.BASE_ASSETS_PATH.includes("workers.dev");
   const uploadsHost = isUsingCloudflare ? new URL(configs.BASE_ASSETS_PATH).hostname : configs.UPLOADS_HOST;
   return uploadsHost
-    ? `https://${uploadsHost}${port ? `:${port}` : ""}${path}`
+    ? `${uploadsHost}${port ? `:${port}` : ""}${path}`
     : getReticulumFetchUrl(path, absolute, host, port);
 }
 
@@ -130,9 +130,13 @@ export async function connectToReticulum(debug = false, params = null, socketCla
     const protocol =
       qs.get("phx_protocol") ||
       configs.RETICULUM_SOCKET_PROTOCOL ||
-      (document.location.protocol === "https:" ? "wss:" : "ws:");
+      (host.includes("localhost") ? "ws:" : "wss:");
 
-    return `${protocol}//${host}${port ? `:${port}` : ""}`;
+    if (port) {
+      return `${protocol}//${host}:${port}`;
+    }
+
+    return `${protocol}//${host}${configs.RETICULUM_SERVER ? `:${new URL(configs.RETICULUM_SERVER).port}` : ""}`;
   };
 
   const socketUrl = await getNewSocketUrl();

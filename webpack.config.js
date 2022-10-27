@@ -1,7 +1,6 @@
 const dotenv = require("dotenv");
 const fs = require("fs");
 const path = require("path");
-const selfsigned = require("selfsigned");
 const webpack = require("webpack");
 const cors = require("cors");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
@@ -10,97 +9,8 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const TOML = require("@iarna/toml");
 const fetch = require("node-fetch");
-const packageLock = require("./package-lock.json");
 const request = require("request");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-
-function createHTTPSConfig() {
-  // Generate certs for the local webpack-dev-server.
-  if (fs.existsSync(path.join(__dirname, "certs"))) {
-    const key = fs.readFileSync(path.join(__dirname, "certs", "key.pem"));
-    const cert = fs.readFileSync(path.join(__dirname, "certs", "cert.pem"));
-
-    return { key, cert };
-  } else {
-    const pems = selfsigned.generate(
-      [
-        {
-          name: "commonName",
-          value: "localhost"
-        }
-      ],
-      {
-        days: 365,
-        keySize: 2048,
-        algorithm: "sha256",
-        extensions: [
-          {
-            name: "subjectAltName",
-            altNames: [
-              {
-                type: 2,
-                value: "localhost"
-              },
-              {
-                type: 2,
-                value: "hubs.local"
-              }
-            ]
-          }
-        ]
-      }
-    );
-
-    fs.mkdirSync(path.join(__dirname, "certs"));
-    fs.writeFileSync(path.join(__dirname, "certs", "cert.pem"), pems.cert);
-    fs.writeFileSync(path.join(__dirname, "certs", "key.pem"), pems.private);
-
-    return {
-      key: pems.private,
-      cert: pems.cert
-    };
-  }
-}
-
-function getModuleDependencies(moduleName) {
-  const deps = packageLock.dependencies;
-  const arr = [];
-
-  const gatherDeps = name => {
-    arr.push(path.join(__dirname, "node_modules", name) + path.sep);
-
-    const moduleDef = deps[name];
-
-    if (moduleDef && moduleDef.requires) {
-      for (const requiredModuleName in moduleDef.requires) {
-        gatherDeps(requiredModuleName);
-      }
-    }
-  };
-
-  gatherDeps(moduleName);
-
-  return arr;
-}
-
-function deepModuleDependencyTest(modulesArr) {
-  const deps = [];
-
-  for (const moduleName of modulesArr) {
-    const moduleDependencies = getModuleDependencies(moduleName);
-    deps.push(...moduleDependencies);
-  }
-
-  return module => {
-    if (!module.nameForCondition) {
-      return false;
-    }
-
-    const name = module.nameForCondition();
-
-    return deps.some(depName => name?.startsWith(depName));
-  };
-}
 
 function createDefaultAppConfig() {
   const schemaPath = path.join(__dirname, "src", "schema.toml");
@@ -158,7 +68,7 @@ async function fetchAppConfigAndEnvironmentVars() {
   };
 
   // Load the Hubs Cloud instance's app config in development
-  const appConfigsResponse = await fetch(`https://${host}/api/v1/app_configs`, { headers });
+  const appConfigsResponse = await fetch(`${host}/api/v1/app_configs`, { headers });
 
   if (!appConfigsResponse.ok) {
     throw new Error(`Error fetching Hubs Cloud config "${appConfigsResponse.statusText}"`);
@@ -174,7 +84,7 @@ async function fetchAppConfigAndEnvironmentVars() {
     return appConfig;
   }
 
-  const hubsConfigsResponse = await fetch(`https://${host}/api/ita/configs/hubs`, { headers });
+  const hubsConfigsResponse = await fetch(`${host}/api/ita/configs/hubs`, { headers });
 
   const hubsConfigs = await hubsConfigsResponse.json();
 
@@ -263,7 +173,7 @@ module.exports = async (env, argv) => {
 
   // Behind and environment var for now pending further testing
   if (process.env.DEV_CSP_SOURCE) {
-    const CSPResp = await fetch(`https://${process.env.DEV_CSP_SOURCE}/`);
+    const CSPResp = await fetch(`${process.env.DEV_CSP_SOURCE}/`);
     const remoteCSP = CSPResp.headers.get("content-security-policy");
     devServerHeaders["content-security-policy"] = remoteCSP;
     // .replaceAll("connect-src", "connect-src https://example.com");
@@ -330,8 +240,7 @@ module.exports = async (env, argv) => {
         }
       },
       server: {
-        type: "https",
-        options: createHTTPSConfig()
+        type: "http",
       },
       host: "0.0.0.0",
       port: 8080,
@@ -368,7 +277,7 @@ module.exports = async (env, argv) => {
           const redirectLocation = req.header("location");
 
           if (redirectLocation) {
-            res.header("Location", "https://localhost:8080/cors-proxy/" + redirectLocation);
+            res.header("Location", "localhost:8080/cors-proxy/" + redirectLocation);
           }
 
           if (req.method === "OPTIONS") {
@@ -463,7 +372,7 @@ module.exports = async (env, argv) => {
           exclude: [path.resolve(__dirname, "node_modules")],
           loader: "babel-loader"
         },
-        // pdfjs uses features that break in IOS14, so we want to run it through babel https://github.com/mozilla/pdf.js/issues/14327
+        // pdfjs uses features that break in IOS14, so we want to run it through babel github.com/mozilla/pdf.js/issues/14327
         // TODO remove when iOS 16 is out as we support last 2 major versions in our .browserslistrc so this will become a noop in terms of fixing that error
         {
           test: /\.js$/,
@@ -574,35 +483,6 @@ module.exports = async (env, argv) => {
         maxAsyncRequests: 10,
         maxInitialRequests: 10,
         cacheGroups: {
-          frontend: {
-            test: deepModuleDependencyTest([
-              "react",
-              "react-dom",
-              "prop-types",
-              "raven-js",
-              "react-intl",
-              "classnames",
-              "react-router",
-              "@fortawesome/fontawesome-svg-core",
-              "@fortawesome/free-solid-svg-icons",
-              "@fortawesome/react-fontawesome"
-            ]),
-            name: "frontend",
-            chunks: "initial",
-            priority: 40
-          },
-          engine: {
-            test: deepModuleDependencyTest(["aframe", "three"]),
-            name: "engine",
-            chunks: "initial",
-            priority: 30
-          },
-          store: {
-            test: deepModuleDependencyTest(["phoenix", "jsonschema", "event-target-shim", "jwt-decode", "js-cookie"]),
-            name: "store",
-            chunks: "initial",
-            priority: 20
-          },
           hubVendors: {
             test: /[\\/]node_modules[\\/]/,
             name: "hub-vendors",
@@ -707,6 +587,7 @@ module.exports = async (env, argv) => {
           RETICULUM_SOCKET_SERVER: process.env.RETICULUM_SOCKET_SERVER,
           THUMBNAIL_SERVER: process.env.THUMBNAIL_SERVER,
           CORS_PROXY_SERVER: process.env.CORS_PROXY_SERVER,
+          MEDIA_SERVER: process.env.MEDIA_SERVER,
           NON_CORS_PROXY_DOMAINS: process.env.NON_CORS_PROXY_DOMAINS,
           BUILD_VERSION: process.env.BUILD_VERSION,
           SENTRY_DSN: process.env.SENTRY_DSN,

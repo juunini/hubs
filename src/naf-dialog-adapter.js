@@ -71,7 +71,7 @@ export class DialogAdapter extends EventEmitter {
   getIceServers(host, port, turn) {
     const iceServers = [];
 
-    this._serverUrl = `wss://${host}:${port}`;
+    this._serverUrl = `${host.includes("localhost") ? "ws" : "wss"}://${host}:${port}`;
 
     if (turn && turn.enabled) {
       turn.transports.forEach(ts => {
@@ -455,7 +455,7 @@ export class DialogAdapter extends EventEmitter {
     this._protoo.removeAllListeners();
     const serverParams = await APP.hubChannel.getHost();
     const { host, port } = serverParams;
-    const newServerUrl = `wss://${host}:${port}`;
+    const newServerUrl = `${host.includes("localhost") ? "ws" : "wss"}://${host}:${port}`;
     if (this._serverUrl === newServerUrl) {
       console.error("Reconnect to dialog failed.");
       this.emit(DIALOG_CONNECTION_ERROR_FATAL);

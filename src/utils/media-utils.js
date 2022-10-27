@@ -11,6 +11,7 @@ import Linkify from "linkify-it";
 import tlds from "tlds";
 import { mediaTypeFor } from "./media-type";
 import anime from "animejs";
+import configs from "./configs";
 
 export const MediaType = {
   MODEL: 1 << 0,
@@ -26,8 +27,8 @@ MediaType.ALL_2D = MediaType.IMAGE | MediaType.VIDEO | MediaType.PDF | MediaType
 const linkify = Linkify();
 linkify.tlds(tlds);
 
-const mediaAPIEndpoint = getReticulumFetchUrl("/api/v1/media");
-const getDirectMediaAPIEndpoint = () => getDirectReticulumFetchUrl("/api/v1/media");
+const mediaAPIEndpoint = configs.MEDIA_SERVER || getReticulumFetchUrl("/api/v1/media");
+const getDirectMediaAPIEndpoint = () => configs.MEDIA_SERVER || getDirectReticulumFetchUrl("/api/v1/media");
 
 const isMobile = AFRAME.utils.device.isMobile();
 const isMobileVR = AFRAME.utils.device.isMobile();

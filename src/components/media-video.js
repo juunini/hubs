@@ -595,7 +595,7 @@ AFRAME.registerComponent("media-video", {
         texture.dash = dashPlayer;
       } else if (AFRAME.utils.material.isHLS(url, contentType)) {
         if (HLS.isSupported()) {
-          const corsProxyPrefix = `https://${configs.CORS_PROXY_SERVER}/`;
+          const corsProxyPrefix = `${configs.CORS_PROXY_SERVER}/`;
           const baseUrl = url.startsWith(corsProxyPrefix) ? url.substring(corsProxyPrefix.length) : url;
           const setupHls = () => {
             if (texture.hls) {

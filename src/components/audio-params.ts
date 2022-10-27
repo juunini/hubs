@@ -42,6 +42,7 @@ export interface AudioSettings {
 
 export const AvatarAudioDefaults: AudioSettings = {
   audioType: AudioType.PannerNode,
+  // @ts-ignore
   distanceModel: window.XRCLOUD?.permissions?.ignore_voice_distance
     ? DistanceModelType.Linear
     : DistanceModelType.Inverse,
@@ -57,6 +58,7 @@ export const AvatarAudioDefaults: AudioSettings = {
 
 export const MediaAudioDefaults: AudioSettings = {
   audioType: AudioType.PannerNode,
+  // @ts-ignore
   distanceModel: window.XRCLOUD?.permissions?.ignore_voice_distance
     ? DistanceModelType.Linear
     : DistanceModelType.Inverse,
@@ -72,6 +74,7 @@ export const MediaAudioDefaults: AudioSettings = {
 
 export const TargetAudioDefaults: AudioSettings = {
   audioType: AudioType.PannerNode,
+  // @ts-ignore
   distanceModel: window.XRCLOUD?.permissions?.ignore_voice_distance
     ? DistanceModelType.Linear
     : DistanceModelType.Inverse,
