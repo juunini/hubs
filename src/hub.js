@@ -1415,6 +1415,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.title = `${hubName} | ${appName}`;
     document.querySelector('link[rel="icon"]').href = faviconUrl;
-    document.querySelector('link[rel="apple-touch-icon"]').href = faviconUrl;
   }
 });
