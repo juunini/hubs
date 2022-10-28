@@ -461,11 +461,7 @@ export function createHeadlessModelForSkinnedMesh(mesh) {
   return createErasedMesh(mesh, eraseBoneIndexes);
 }
 
-export function createModelForSkinnedMesh(mesh) {
-  return createErasedMesh(mesh, []);
-}
-
-export const isFacingCamera = (function() {
+export const isFacingCamera = (function () {
   const objWorldDir = new THREE.Vector3();
   const objWorld = new THREE.Vector3();
   const camWorld = new THREE.Vector3();
