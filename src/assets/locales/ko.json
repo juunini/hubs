@@ -160,7 +160,6 @@
   "toolbar.spectate-in-vr-button": "VR로 관전하기",
   "toolbar.enter-vr-button": "VR로 입장하기",
   "toolbar.leave-room-button": "나가기",
-  "toolbar.camera-view": "3인칭",
   "avatar-setup-sidebar.title": "아바타 설정",
   "avatar-settings-content.display-name-label": "닉네임",
   "avatar-settings-content.display-name-description": "알파벳, 하이픈(-), 언더스코어(_), 물결(~)로 구성된 3~32글자의 이름을 입력해주세요.",
