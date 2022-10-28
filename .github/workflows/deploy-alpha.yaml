@@ -14,9 +14,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 16.x
+          cache: yarn
 
       - name: Install
-        run: yarn
+        run: yarn --prefer-offline
 
       - name: Build
         run: yarn build
