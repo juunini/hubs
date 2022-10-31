@@ -200,8 +200,10 @@ export const addMedia = (
 
   entity.object3D.matrixNeedsUpdate = true;
 
-  const sharedScreen = document.querySelector("[shared-screen]");
-  sharedScreen ? sharedScreen.appendChild(entity) : (parentEl || scene).appendChild(entity);
+  const sharedScreen = src instanceof MediaStream
+    ? document.querySelector("[shared-screen]") || parentEl || scene
+    : parentEl || scene;
+  sharedScreen.appendChild(entity);
 
   const orientation = new Promise(function (resolve) {
     if (needsToBeUploaded) {
