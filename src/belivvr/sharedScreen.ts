@@ -1,32 +1,15 @@
-export function setMediaVideoGeometry(entity: any, timer = 1000, noShareScreenLimit = 10) {
-  let noShareScreenCount = 0;
-  
-  const interval = setInterval(() => {
-    const sharedScreen = document.querySelector("[shared-screen]")
-    if (sharedScreen === null) {
-      noShareScreenCount += 1;
+export function useSharedScreen() {
+  const sharedScreen = document.querySelector("[shared-screen]");
+  const offset = sharedScreen ? { x: 0, y: 0, z: 0.001 } : { x: 0, y: 0, z: -1.5 };
+  const target = sharedScreen || "#avatar-pov-node";
 
-      if (noShareScreenCount > noShareScreenLimit) {
-        clearInterval(interval);
-      }
-    }
+  return { sharedScreen, offset, target };
+}
 
-    if (entity.mesh?.geometry?.scale) {
-      const { x: scaleX, y: scaleY, z: scaleZ } = sharedScreen!.getAttribute('scale') as any
-      const { x: rotationX, y: rotationY, z: rotationZ } = sharedScreen!.getAttribute('rotation') as any
-      const { x: positionX, y: positionY, z: positionZ } = sharedScreen!.getAttribute('position') as any
+export function setScaleFromSharedScreen(entity: HTMLElement, sharedScreen: HTMLElement | null) {
+  if (sharedScreen === null) {
+    return;
+  }
 
-      const geometry = entity.mesh.geometry;
-
-      geometry.scale(scaleX, scaleY, scaleZ);
-
-      geometry.rotateX(rotationX);
-      geometry.rotateY(rotationY);
-      geometry.rotateZ(rotationZ);
-
-      geometry.translate(positionX, positionY + 2, positionZ);
-
-      clearInterval(interval);
-    }
-  }, timer);
+  entity.setAttribute("scale", sharedScreen.getAttribute("scale")!);
 }

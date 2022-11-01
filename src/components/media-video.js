@@ -22,7 +22,6 @@ import { isSafari } from "../utils/detect-safari";
 import { isIOS as detectIOS } from "../utils/is-mobile";
 import { Layers } from "../camera-layers";
 import qsTruthy from "../utils/qs_truthy";
-import { setMediaVideoGeometry } from '../belivvr/sharedScreen';
 
 const ONCE_TRUE = { once: true };
 const TYPE_IMG_PNG = { type: "image/png" };
@@ -575,9 +574,6 @@ AFRAME.registerComponent("media-video", {
         APP.dialog.on("stream_updated", this._onStreamUpdated, this);
         videoEl.srcObject = new MediaStream(stream.getVideoTracks());
         // If hls.js is supported we always use it as it gives us better events
-        if (this.el.parentEl.attributes['shared-screen'] === undefined) {
-          setMediaVideoGeometry(this);
-        }
       } else if (contentType.startsWith("application/dash")) {
         const dashPlayer = MediaPlayer().create();
         dashPlayer.extend("RequestModifier", function () {

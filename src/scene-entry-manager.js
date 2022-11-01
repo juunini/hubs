@@ -25,6 +25,7 @@ import { MediaDevices, MediaDevicesEvents } from "./utils/media-devices-utils";
 import { addComponent, removeEntity } from "bitecs";
 import { MyCameraTool } from "./bit-components";
 import { anyEntityWith } from "./utils/bit-utils";
+import { setScaleFromSharedScreen, useSharedScreen } from "./belivvr/sharedScreen";
 
 export default class SceneEntryManager {
   constructor(hubChannel, authChannel, history) {
@@ -210,8 +211,7 @@ export default class SceneEntryManager {
   };
 
   _setupMedia = () => {
-    const sharedScreen = document.querySelector("[shared-screen]");
-    const offset = sharedScreen ? { x: 0, y: 0, z: 0.001 } : { x: 0, y: 0, z: -1.5 };
+    const { sharedScreen, offset, target } = useSharedScreen();
 
     const spawnMediaInfrontOfPlayer = (src, contentOrigin) => {
       if (!this.hubChannel.can("spawn_and_move_media")) return;
@@ -225,10 +225,12 @@ export default class SceneEntryManager {
       );
       orientation.then(or => {
         entity.setAttribute("offset-relative-to", {
-          target: sharedScreen || "#avatar-pov-node",
+          target,
           offset,
           orientation: or
         });
+
+        setScaleFromSharedScreen(entity, sharedScreen);
       });
 
       return entity;
