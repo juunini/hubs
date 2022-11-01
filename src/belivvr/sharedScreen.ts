@@ -6,10 +6,11 @@ export function useSharedScreen() {
   return { sharedScreen, offset, target };
 }
 
-export function setScaleFromSharedScreen(entity: HTMLElement, sharedScreen: HTMLElement | null) {
-  if (sharedScreen === null) {
-    return;
-  }
-
+export function setScaleFromSharedScreen(entity: HTMLElement, sharedScreen: HTMLElement) {
   entity.setAttribute("scale", sharedScreen.getAttribute("scale")!);
+}
+
+export function setPinned(entity: HTMLElement) {
+  // @ts-ignore
+  entity.setAttribute("pinnable", { pinned: true });
 }

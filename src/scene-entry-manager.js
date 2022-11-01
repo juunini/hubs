@@ -25,7 +25,11 @@ import { MediaDevices, MediaDevicesEvents } from "./utils/media-devices-utils";
 import { addComponent, removeEntity } from "bitecs";
 import { MyCameraTool } from "./bit-components";
 import { anyEntityWith } from "./utils/bit-utils";
-import { setScaleFromSharedScreen, useSharedScreen } from "./belivvr/sharedScreen";
+import {
+  setScaleFromSharedScreen,
+  useSharedScreen,
+  setPinned
+} from "./belivvr/sharedScreen";
 
 export default class SceneEntryManager {
   constructor(hubChannel, authChannel, history) {
@@ -230,7 +234,12 @@ export default class SceneEntryManager {
           orientation: or
         });
 
+        if (sharedScreen === null) {
+          return;
+        }
+
         setScaleFromSharedScreen(entity, sharedScreen);
+        setPinned(entity)
       });
 
       return entity;
