@@ -204,9 +204,14 @@ AFRAME.registerSystem("userinput", {
 
   init() {
     window.addEventListener("freeze", () => {
-      console.log(this.activeDevices.items);
       if (!this.tempItems) this.tempItems = [...this.activeDevices.items];
       this.activeDevices.items.length = 0;
+      this.activeDevices.items =
+       [...this.tempItems.filter(
+        item => item instanceof MouseDevice 
+        || item instanceof AppAwareMouseDevice 
+        || item instanceof AppAwareTouchscreenDevice
+        )];
     });
 
     window.addEventListener("unfreeze", () => {
