@@ -27,7 +27,7 @@ import { MyCameraTool } from "./bit-components";
 import { anyEntityWith } from "./utils/bit-utils";
 import {
   setScaleFromSharedScreen,
-  useSharedScreen,
+  getSharedScreen,
   setPinned
 } from "./belivvr/sharedScreen";
 
@@ -215,9 +215,9 @@ export default class SceneEntryManager {
   };
 
   _setupMedia = () => {
-    const { sharedScreen, offset, target } = useSharedScreen();
-
     const spawnMediaInfrontOfPlayer = (src, contentOrigin) => {
+      const { sharedScreen, offset, target } = getSharedScreen(src);
+
       if (!this.hubChannel.can("spawn_and_move_media")) return;
       const { entity, orientation } = addMedia(
         src,

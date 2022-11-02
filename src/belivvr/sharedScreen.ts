@@ -1,9 +1,24 @@
-export function useSharedScreen() {
-  const sharedScreen = document.querySelector("[shared-screen]");
-  const offset = sharedScreen ? { x: 0, y: 0, z: 0.001 } : { x: 0, y: 0, z: -1.5 };
-  const target = sharedScreen || "#avatar-pov-node";
+export function getSharedScreen(src: string) {
+  const isVideo = src.endsWith('/video');
+  const defaultOffset = { x: 0, y: 0, z: -1.5 };
+  const defaultTarget = "#avatar-pov-node";
 
-  return { sharedScreen, offset, target };
+  if (!isVideo) {
+    return {
+      sharedScreen: null,
+      offset: defaultOffset,
+      target: defaultTarget
+    }
+  }
+
+  const sharedScreen = document.querySelector("[shared-screen]");
+  const z = sharedScreen !== null ? 0.001 : defaultOffset.z;
+
+  return {
+    sharedScreen,
+    offset: { ...defaultOffset, z },
+    target: sharedScreen || defaultTarget
+  };
 }
 
 export function setScaleFromSharedScreen(entity: HTMLElement, sharedScreen: HTMLElement) {
