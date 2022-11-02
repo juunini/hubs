@@ -204,6 +204,7 @@ AFRAME.registerSystem("userinput", {
 
   init() {
     window.addEventListener("freeze", () => {
+      window.APP.store.state.preferences.disableTeleporter = true;
       if (!this.tempItems) this.tempItems = [...this.activeDevices.items];
       this.activeDevices.items.length = 0;
       this.activeDevices.items =
@@ -215,6 +216,7 @@ AFRAME.registerSystem("userinput", {
     });
 
     window.addEventListener("unfreeze", () => {
+      window.APP.store.state.preferences.disableTeleporter = false;
       if (this.tempItems) this.activeDevices.items = [...this.tempItems];
       return;
     });
