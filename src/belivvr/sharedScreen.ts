@@ -1,9 +1,10 @@
-export function getSharedScreen(src: string) {
-  const isVideo = src.endsWith('/video');
+export function getSharedScreen(src: MediaStream | string) {
+  const isMediaStream = src instanceof MediaStream;
+  const isVideo = !isMediaStream && src.endsWith('/video');
   const defaultOffset = { x: 0, y: 0, z: -1.5 };
   const defaultTarget = "#avatar-pov-node";
 
-  if (!isVideo) {
+  if (!isMediaStream && !isVideo) {
     return {
       sharedScreen: null,
       offset: defaultOffset,
