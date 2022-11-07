@@ -1214,7 +1214,7 @@ class UIRoot extends Component {
               icon: LeaveIcon,
               onClick: () => {
                 this.showNonHistoriedDialog(LeaveRoomModal, {
-                  destinationUrl: "/",
+                  destinationUrl: window.XRCLOUD?.leaveUrl || "/",
                   reason: LeaveReason.leaveRoom
                 });
               }
@@ -1616,7 +1616,7 @@ class UIRoot extends Component {
                         preset="cancel"
                         onClick={() => {
                           this.showNonHistoriedDialog(LeaveRoomModal, {
-                            destinationUrl: "/",
+                            destinationUrl: window.XRCLOUD?.leaveUrl || "/",
                             reason: LeaveReason.leaveRoom
                           });
                         }}
