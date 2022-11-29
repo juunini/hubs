@@ -833,8 +833,9 @@ class UIRoot extends Component {
               if (!window.XRCLOUD && promptForNameAndAvatarBeforeEntry) {
                 this.pushHistoryState("entry_step", "profile");
               } else {
-                this.onRequestMicPermission();
-                this.pushHistoryState("entry_step", "audio");
+                this.onRequestMicPermission()
+                  .then(() => this.props.enterScene(this.state.enterInVR, true))
+                  .then(() => this.setState({ entered: true, entering: false, showShareDialog: false }));
               }
             } else {
               this.handleForceEntry();
