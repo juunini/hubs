@@ -152,7 +152,7 @@ const inflateEntities = function (indexToEntityMap, node, templates, isRoot, mod
   // TODO: Remove this once we update the legacy avatars to the new node names
   if (node.name === "Chest") {
     node.name = "Spine";
-  } else if (node.name === "Root Scene") {
+  } else if (["Root Scene", "Armature"].includes(node.name)) {
     node.name = "AvatarRoot";
   } else if (node.name === "Bot_Skinned") {
     node.name = "AvatarMesh";

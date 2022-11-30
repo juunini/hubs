@@ -81,6 +81,10 @@ AFRAME.registerComponent("ik-controller", {
     neck: { type: "string", default: "Neck" },
     leftHand: { type: "string", default: "LeftHand" },
     rightHand: { type: "string", default: "RightHand" },
+    leftArm: { type: "string", default: "LeftArm" },
+    rightArm: { type: "string", default: "RightArm" },
+    leftFoot: { type: "string", default: "LeftFoot" },
+    rightFoot: { type: "string", default: "RightFoot" },
     chest: { type: "string", default: "Spine" },
     rotationSpeed: { default: 8 },
     maxLerpAngle: { default: 90 * THREE.MathUtils.DEG2RAD },
@@ -150,18 +154,41 @@ AFRAME.registerComponent("ik-controller", {
 
     if (this.data.leftHand !== oldData.leftHand) {
       this.leftHand = this.el.object3D.getObjectByName(this.data.leftHand);
+      this._setHandPosition("leftHand");
     }
 
     if (this.data.rightHand !== oldData.rightHand) {
       this.rightHand = this.el.object3D.getObjectByName(this.data.rightHand);
+      this._setHandPosition("rightHand");
     }
 
     if (this.data.chest !== oldData.chest) {
       this.chest = this.el.object3D.getObjectByName(this.data.chest);
     }
 
+    if (this.data.leftArm !== oldData.leftArm)
+      this.leftArm = this.el.object3D.getObjectByName(this.data.leftArm);
+
+    if (this.data.rightArm !== oldData.rightArm)
+      this.rightArm = this.el.object3D.getObjectByName(this.data.rightArm);
+
+    if (this.data.leftFoot !== oldData.leftFoot)
+      this.leftFoot = this.el.object3D.getObjectByName(this.data.leftFoot);
+
+    if (this.data.rightFoot !== oldData.rightFoot)
+      this.rightFoot = this.el.object3D.getObjectByName(this.data.rightFoot);
+
+    const avatar = this.el.closest(".model");
+    const attributeMethod = this._hasFoot() ? 'setAttribute' : 'removeAttribute';
+    avatar[attributeMethod]("position", new THREE.Vector3(0, -1.2, 0));
+
+    this._hands.forEach(hand => this._isNoControllerAndNoArmAvatar(hand) && this._hideHand(hand));
+
     // Set middleEye's position to be right in the middle of the left and right eyes.
-    this.middleEyePosition.addVectors(this.leftEye.position, this.rightEye.position);
+    this.middleEyePosition.addVectors(
+      this.leftEye?.position || new THREE.Vector3(0, 1.6, 0),
+      this.rightEye?.position || new THREE.Vector3(0, 1.6, 0)
+    );
     this.middleEyePosition.divideScalar(2);
     this.middleEyeMatrix.makeTranslation(this.middleEyePosition.x, this.middleEyePosition.y, this.middleEyePosition.z);
     this.invMiddleEyeToHead = this.middleEyeMatrix.copy(this.middleEyeMatrix).invert();
@@ -179,7 +206,7 @@ AFRAME.registerComponent("ik-controller", {
 
     const root = this.ikRoot.el.object3D;
     root.updateMatrices();
-    const { camera, leftController, rightController } = this.ikRoot;
+    const { camera } = this.ikRoot;
 
     camera.object3D.updateMatrix();
 
@@ -273,10 +300,17 @@ AFRAME.registerComponent("ik-controller", {
       chest.matrixNeedsUpdate = true;
     }
 
-    const { leftHand, rightHand } = this;
+    this._hands.forEach(hand => {
+      if (this._existsControllerAndHand(hand))
+        this.updateHand(
+          HAND_ROTATIONS[hand],
+          this._getHand(hand),
+          this._getController(hand).object3D,
+          true,
+          this.isInView
+        );
+    });
 
-    if (leftHand) this.updateHand(HAND_ROTATIONS.left, leftHand, leftController.object3D, true, this.isInView);
-    if (rightHand) this.updateHand(HAND_ROTATIONS.right, rightHand, rightController.object3D, false, this.isInView);
     this.forceIkUpdate = false;
 
     if (!this._hadFirstTick) {
@@ -353,5 +387,71 @@ AFRAME.registerComponent("ik-controller", {
         }
       }
     };
-  })()
+  })(),
+
+  /**
+   * @private
+   * @typedef {"left" | "right"} Hand
+   * @type {Hand[]}
+   */
+  _hands: ["left", "right"],
+
+  /**
+   * @private
+   * @param {Hand} hand
+   * @returns {Object.<string, THREE.Object3D>} - if controller is exists for the given direction.
+   */
+  _getController(hand) {
+    return this.ikRoot[`${hand}Controller`];
+  },
+
+  /**
+   * @private
+   * @param {Hand} hand
+   * @returns {THREE.Object3D} - if avatar has hand for the given direction.
+   */
+  _getHand(hand) {
+    return this[`${hand}Hand`];
+  },
+
+  /**
+   * @private
+   * @param {Hand} hand
+   * @returns {boolean}
+   */
+  _existsControllerAndHand(hand) {
+    return this._getController(hand).object3D.visible && this._getHand(hand);
+  },
+
+  /**
+   * @private
+   * @param {Hand} hand
+   * @returns {boolean}
+   */
+  _isNoControllerAndNoArmAvatar(hand) {
+    return !this.ikRoot[`${hand}Controller`].object3D.visible && !this[`${hand}Arm`];
+  },
+
+  /**
+   * @private
+   * @param {Hand} hand
+   */
+  _hideHand(hand) {
+    this[`${hand}Hand`]?.el.setAttribute("visible", false);
+  },
+
+  /**
+   * @private
+   * @returns {boolean}
+   */
+  _hasFoot() {
+    return this.leftFoot || this.rightFoot;
+  },
+
+  /**
+   * @private
+   */
+  _setHandPosition(hand) {
+    this[hand]?.el.setAttribute("position", this[hand]?.position);
+  }
 });
