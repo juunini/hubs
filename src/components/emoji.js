@@ -16,7 +16,28 @@ import emoji4Model from "../assets/models/emojis/emoji_4.glb";
 import emoji5Model from "../assets/models/emojis/emoji_5.glb";
 import emoji6Model from "../assets/models/emojis/emoji_6.glb";
 
-export const emojis = [
+export const emojis = window.XRCLOUD?.emoji_api?.length > 0 ? window.XRCLOUD.emoji_api.map(({model, particle, ...rest}) => {
+  return {
+    ...rest,
+    model,
+    particleEmitterConfig: {
+      src: particle,
+      resolve: false,
+      particleCount: 20,
+      startSize: 0.01,
+      endSize: 0.2,
+      sizeRandomness: 0.05,
+      lifetime: 1,
+      lifetimeRandomness: 0.2,
+      ageRandomness: 1,
+      startVelocity: { x: 0, y: 1, z: 0 },
+      endVelocity: { x: 0, y: 0.25, z: 0 },
+      startOpacity: 1,
+      middleOpacity: 1,
+      endOpacity: 0
+    }
+  };
+}) : [
   { id: "smile", model: emoji0Model, particle: emoji0Particle },
   { id: "laugh", model: emoji1Model, particle: emoji1Particle },
   { id: "clap", model: emoji2Model, particle: emoji2Particle },
