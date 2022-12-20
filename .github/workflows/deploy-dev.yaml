@@ -34,7 +34,7 @@ jobs:
           BASE_ASSETS_PATH: https://assets.dev.xrcloud.belivvr.com/hubs/
           RETICULUM_SERVER: https://reticulum.dev.xrcloud.belivvr.com
           THUMBNAIL_SERVER: https://nearspark.hubs-alpha.belivvr.com
-          NON_CORS_PROXY_DOMAINS: hubs.local,dev.reticulum.io,hubs-upload-cdn.com,hubs.belivvr.com,hubs-alpha.belivvr.com
+          NON_CORS_PROXY_DOMAINS: hubs.local,stage.reticulum.io,hubs-upload-cdn.com,hubs.belivvr.com,hubs-alpha.belivvr.com,assets.stage.xrcloud.belivvr.com,assets.dev.xrcloud.belivvr.com,reticulum.stage.xrcloud.belivvr.com,reticulum.dev.xrcloud.belivvr.com
           MEDIA_SERVER: https://hubs-api.dev.xrcloud.belivvr.com/api/v1/media
 
       - name: Deploy S3
