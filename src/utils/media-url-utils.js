@@ -127,6 +127,7 @@ export const getCustomGLTFParserURLResolver = gltfUrl => url => {
   if (/^(https?:)?\/\//i.test(url)) return proxiedUrlFor(url);
   if (/^data:.*,.*$/i.test(url)) return url;
   if (/^blob:.*$/i.test(url)) return url;
+  console.log(url, configs.NON_CORS_PROXY_DOMAINS)
   const isNonCors = configs.NON_CORS_PROXY_DOMAINS.split(',').find(domain => url.includes(domain))
   if (isNonCors) return url;
 
